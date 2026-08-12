@@ -1,5 +1,5 @@
 // ============================================================
-// === KENDİ KISA LINK SİSTEMİ - acikmetin.com/HyDwADDT gibi ===
+// === KENDİ KISA LINK SİSTEMİ ===
 // ============================================================
 const BASE62 = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 
@@ -36,7 +36,7 @@ function generateShortCode() {
     return code.padStart(8, '0');
 }
 
-// Kısa link oluştur (view.html ile çalışacak)
+// Kısa link oluştur
 function createShortLink(text, password, duration) {
     const createdAt = Math.floor(Date.now() / 1000);
     let content = text;
@@ -71,9 +71,9 @@ function createShortLink(text, password, duration) {
     
     localStorage.setItem('turhan_short_links', JSON.stringify(linkDB));
     
-    // view.html'ye yönlendirme linki oluştur
-    const baseUrl = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '/');
-    return baseUrl + 'view.html?d=' + encodeURIComponent(encoded) + '&code=' + code;
+    // Link'i oluştur
+    const baseUrl = window.location.origin + window.location.pathname;
+    return baseUrl + '?s=' + code;
 }
 
 // Link verisini al
