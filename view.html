@@ -3,32 +3,174 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Turhan TV HD - İçerik</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Turhan TV HD Premium - İçerik</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #111827;
+            --bg-card: #1a2332;
+            --bg-input: #0d1520;
+            --border-color: #2a3a52;
+            --text-primary: #f0f4ff;
+            --text-secondary: #94a3b8;
+            --accent: #6366f1;
+            --accent-hover: #818cf8;
+            --accent-glow: rgba(99, 102, 241, 0.3);
+            --gold: #f59e0b;
+            --gold-glow: rgba(245, 158, 11, 0.2);
+            --danger: #ef4444;
+            --success: #22c55e;
+        }
+
         body {
-            background: var(--bg-main);
-            color: var(--text-main);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Inter', system-ui, sans-serif;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 24px 16px;
-            font-family: 'Inter', system-ui, sans-serif;
+            padding: 24px;
+            background-image: 
+                radial-gradient(ellipse at 10% 20%, rgba(99, 102, 241, 0.05) 0%, transparent 50%),
+                radial-gradient(ellipse at 90% 80%, rgba(99, 102, 241, 0.05) 0%, transparent 50%);
         }
-        .view-container {
-            max-width: 800px;
+
+        .premium-container {
+            max-width: 900px;
             width: 100%;
-            background: var(--panel-bg);
-            border: 1px solid var(--panel-border);
-            border-radius: 24px;
-            padding: 30px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: 
+                0 0 60px rgba(99, 102, 241, 0.05),
+                0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            position: relative;
         }
-        .view-header {
+
+        .premium-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--gold), var(--accent));
+            background-size: 200% 100%;
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* HEADER */
+        .premium-header {
+            padding: 24px 32px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(17, 24, 39, 0.8);
+            backdrop-filter: blur(10px);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .header-brand .icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--accent), #8b5cf6);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color: white;
+            box-shadow: 0 4px 15px var(--accent-glow);
+        }
+
+        .header-brand .name {
+            font-size: 1.15rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .header-brand .badge {
+            font-size: 0.6rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--gold), #d97706);
+            color: white;
+            padding: 2px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .header-status {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .header-status .code-badge {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            color: var(--accent);
+            background: var(--bg-input);
+            padding: 6px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        /* TIMER */
+        .timer-premium {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 16px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            background: rgba(239, 68, 68, 0.08);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.15);
+        }
+
+        .timer-premium.urgent {
+            animation: pulse 1s ease-in-out infinite;
+            background: rgba(239, 68, 68, 0.15);
+        }
+
+        .timer-premium i {
+            font-size: 0.9rem;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(0.98); }
+        }
+
+        /* İÇERİK ALANI */
+        .premium-content {
+            padding: 32px;
+        }
+
+        .premium-content .meta-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -36,197 +178,337 @@
             flex-wrap: wrap;
             gap: 10px;
         }
-        .view-header .brand {
+
+        .premium-content .meta-bar .meta-item {
             display: flex;
             align-items: center;
-            gap: 12px;
-            font-weight: 700;
-            font-size: 1.1rem;
+            gap: 6px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
         }
-        .view-header .brand-icon {
-            width: 40px; height: 40px;
-            background: linear-gradient(135deg, var(--accent), #8b5cf6);
-            border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
-            color: white;
-            font-size: 1.2rem;
-        }
-        .view-header .code-badge {
+
+        .premium-content .meta-bar .meta-item i {
             color: var(--accent);
-            font-family: monospace;
-            font-size: 0.9rem;
-            background: var(--input-bg);
-            padding: 4px 12px;
-            border-radius: 6px;
-            border: 1px solid var(--panel-border);
+            width: 16px;
         }
-        .view-content {
-            background: var(--input-bg);
+
+        .content-card {
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 28px;
+            min-height: 280px;
+            max-height: 550px;
+            overflow-y: auto;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.95rem;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            word-break: break-word;
+            position: relative;
+            transition: border-color 0.3s;
+        }
+
+        .content-card:hover {
+            border-color: var(--accent);
+        }
+
+        .content-card::-webkit-scrollbar {
+            width: 6px;
+        }
+        .content-card::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+            border-radius: 10px;
+        }
+        .content-card::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 10px;
+        }
+        .content-card::-webkit-scrollbar-thumb:hover {
+            background: var(--accent);
+        }
+
+        /* Şifre Modal - Premium */
+        .password-premium {
+            text-align: center;
+            padding: 30px 20px;
+        }
+
+        .password-premium .lock-icon {
+            font-size: 4rem;
+            color: var(--accent);
+            margin-bottom: 16px;
+            display: block;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .password-premium h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .password-premium p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 24px;
+        }
+
+        .password-premium .input-group {
+            max-width: 400px;
+            margin: 0 auto;
+            display: flex;
+            gap: 12px;
+        }
+
+        .password-premium .input-group input {
+            flex: 1;
+            padding: 12px 18px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .password-premium .input-group input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        .password-premium .input-group .btn-unlock {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--accent), #8b5cf6);
+            color: white;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .password-premium .input-group .btn-unlock:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px var(--accent-glow);
+        }
+
+        .password-premium .decrypted-box {
+            margin-top: 20px;
+            background: var(--bg-primary);
             border-radius: 12px;
             padding: 20px;
-            border: 1px solid var(--panel-border);
+            border: 1px solid var(--border-color);
             font-family: 'Fira Code', monospace;
             white-space: pre-wrap;
             word-break: break-word;
-            min-height: 200px;
-            max-height: 500px;
-            overflow-y: auto;
-            font-size: 0.95rem;
-            line-height: 1.6;
+            display: none;
+            text-align: left;
         }
-        .view-content::-webkit-scrollbar {
-            width: 6px;
+
+        /* EXPIRED - Premium */
+        .expired-premium {
+            text-align: center;
+            padding: 60px 30px;
         }
-        .view-content::-webkit-scrollbar-track {
-            background: var(--input-bg);
-            border-radius: 10px;
+
+        .expired-premium .icon {
+            font-size: 5rem;
+            color: var(--danger);
+            margin-bottom: 16px;
+            display: block;
         }
-        .view-content::-webkit-scrollbar-thumb {
-            background: var(--panel-border);
-            border-radius: 10px;
+
+        .expired-premium h2 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 8px;
         }
-        .view-actions {
+
+        .expired-premium p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: 28px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* AKSİYON BUTONLARI */
+        .premium-actions {
             display: flex;
-            gap: 10px;
-            margin-top: 20px;
+            gap: 12px;
+            margin-top: 24px;
             flex-wrap: wrap;
         }
-        .btn {
-            background: var(--accent);
-            color: white;
+
+        .premium-actions .btn {
+            padding: 10px 22px;
             border: none;
-            padding: 10px 20px;
             border-radius: 10px;
             font-weight: 600;
             font-size: 0.85rem;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
-            gap: 7px;
-            transition: all 0.15s;
-            text-decoration: none;
-        }
-        .btn:hover { background: var(--accent-hover); transform: translateY(-1px); }
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.05);
-            color: var(--text-muted);
-            border: 1px solid var(--panel-border);
-        }
-        .btn-secondary:hover { background: rgba(255, 255, 255, 0.08); }
-        .timer-badge {
-            background: rgba(239, 68, 68, 0.1);
-            color: var(--danger);
-            border: 1px solid rgba(239, 68, 68, 0.2);
-            padding: 5px 12px;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
             gap: 8px;
+            transition: all 0.3s;
+            text-decoration: none;
+            font-family: 'Inter', system-ui, sans-serif;
         }
-        .timer-badge.urgent {
-            background: rgba(239, 68, 68, 0.2);
-            animation: pulse 1s infinite;
+
+        .premium-actions .btn-primary {
+            background: linear-gradient(135deg, var(--accent), #8b5cf6);
+            color: white;
         }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.6; }
+
+        .premium-actions .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px var(--accent-glow);
         }
-        .password-modal {
-            text-align: center;
-            padding: 20px 0;
+
+        .premium-actions .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
         }
-        .password-modal .icon {
-            font-size: 3rem;
-            color: var(--accent);
-            margin-bottom: 16px;
+
+        .premium-actions .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-2px);
         }
-        .password-modal h3 {
-            margin-bottom: 8px;
-            font-size: 1.2rem;
+
+        .premium-actions .btn-gold {
+            background: linear-gradient(135deg, var(--gold), #d97706);
+            color: white;
         }
-        .password-modal p {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            margin-bottom: 20px;
+
+        .premium-actions .btn-gold:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px var(--gold-glow);
         }
-        .password-input-group {
-            max-width: 360px;
-            margin: 0 auto;
+
+        /* FOOTER */
+        .premium-footer {
+            padding: 16px 32px;
+            border-top: 1px solid var(--border-color);
             display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
             gap: 10px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            background: rgba(17, 24, 39, 0.6);
         }
-        .password-input-group input {
-            flex: 1;
-            padding: 10px 14px;
-            border-radius: 8px;
-            border: 1px solid var(--panel-border);
-            background: var(--input-bg);
-            color: var(--text-main);
-            outline: none;
-            font-size: 0.95rem;
+
+        .premium-footer .footer-links {
+            display: flex;
+            gap: 20px;
         }
-        .password-input-group input:focus { border-color: var(--accent); }
-        .expired-section {
-            text-align: center;
-            padding: 40px 20px;
+
+        .premium-footer .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s;
         }
-        .expired-section .icon {
-            font-size: 4rem;
-            color: var(--danger);
-            margin-bottom: 16px;
+
+        .premium-footer .footer-links a:hover {
+            color: var(--accent);
         }
-        .expired-section h2 {
-            margin-bottom: 8px;
-            font-size: 1.5rem;
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .premium-header { padding: 18px 20px; flex-direction: column; align-items: flex-start; }
+            .header-status { width: 100%; justify-content: flex-start; flex-wrap: wrap; }
+            .premium-content { padding: 20px; }
+            .content-card { padding: 18px; min-height: 200px; max-height: 400px; font-size: 0.85rem; }
+            .password-premium .input-group { flex-direction: column; }
+            .password-premium .input-group .btn-unlock { justify-content: center; }
+            .premium-actions { justify-content: center; }
+            .premium-footer { flex-direction: column; text-align: center; }
+            .premium-footer .footer-links { justify-content: center; }
         }
-        .expired-section p {
-            color: var(--text-muted);
-            margin-bottom: 24px;
+
+        @media (max-width: 480px) {
+            .premium-container { border-radius: 16px; }
+            .premium-header { padding: 14px 16px; }
+            .header-brand .name { font-size: 1rem; }
+            .premium-content { padding: 14px; }
+            .content-card { padding: 14px; min-height: 150px; font-size: 0.8rem; }
+            .expired-premium h2 { font-size: 1.3rem; }
         }
     </style>
 </head>
 <body>
 
-<div class="view-container" id="viewContainer">
-    <div class="view-header">
-        <div class="brand">
-            <div class="brand-icon"><i class="fa-solid fa-tv"></i></div>
-            <span>Turhan TV HD</span>
+<div class="premium-container" id="premiumContainer">
+    <!-- HEADER -->
+    <div class="premium-header">
+        <div class="header-brand">
+            <div class="icon"><i class="fa-solid fa-tv"></i></div>
+            <span class="name">Turhan TV HD</span>
+            <span class="badge">Premium</span>
         </div>
-        <div id="codeBadge" class="code-badge">/</div>
+        <div class="header-status">
+            <span class="code-badge" id="codeBadge">/</span>
+            <div class="timer-premium" id="timerDisplay" style="display:none;">
+                <i class="fa-solid fa-stopwatch"></i>
+                <span id="timerText">Kalan Süre</span>
+            </div>
+        </div>
     </div>
 
-    <div id="contentArea">
-        <!-- İçerik buraya gelecek -->
+    <!-- İÇERİK -->
+    <div class="premium-content" id="contentArea">
+        <!-- Dinamik içerik buraya gelecek -->
     </div>
 
-    <div class="view-actions">
-        <button class="btn btn-secondary" onclick="copyContent()">
-            <i class="fa-solid fa-copy"></i> Kopyala
-        </button>
-        <button class="btn btn-secondary" onclick="downloadContent()">
-            <i class="fa-solid fa-download"></i> İndir
-        </button>
-        <a href="index.html" class="btn">
-            <i class="fa-solid fa-plus"></i> Yeni Metin
-        </a>
+    <!-- FOOTER -->
+    <div class="premium-footer">
+        <span><i class="fa-regular fa-copyright"></i> 2024 Turhan TV HD Premium</span>
+        <div class="footer-links">
+            <a href="#" onclick="window.location.href=window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '/') + 'index.html'">
+                <i class="fa-solid fa-plus"></i> Yeni Metin
+            </a>
+            <a href="#" onclick="copyContent()"><i class="fa-regular fa-copy"></i> Kopyala</a>
+            <a href="#" onclick="downloadContent()"><i class="fa-regular fa-file-lines"></i> İndir</a>
+        </div>
     </div>
 </div>
 
 <script>
+    // ============================================================
+    // === PREMIUM VIEW PAGE - TÜM MANTIK ===
+    // ============================================================
+    
     // URL'den veriyi al
     const params = new URLSearchParams(window.location.search);
     const encodedData = params.get('d');
+    const code = params.get('code') || '???';
+    
+    // Kod badge'ini güncelle
+    document.getElementById('codeBadge').textContent = '/' + code;
     
     if (!encodedData) {
         document.getElementById('contentArea').innerHTML = `
-            <div class="expired-section">
-                <div class="icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
-                <h2>Geçersiz Link!</h2>
-                <p>Bu link geçersiz veya bozuk.</p>
-                <a href="index.html" class="btn"><i class="fa-solid fa-plus"></i> Yeni Metin Oluştur</a>
+            <div class="expired-premium">
+                <span class="icon"><i class="fa-solid fa-triangle-exclamation"></i></span>
+                <h2>Geçersiz Link</h2>
+                <p>Bu link geçersiz veya bozuk. Lütfen yeni bir link oluşturun.</p>
+                <div class="premium-actions" style="justify-content:center;">
+                    <a href="index.html" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Yeni Metin Oluştur</a>
+                </div>
             </div>
         `;
     } else {
@@ -234,144 +516,269 @@
             const jsonString = decodeURIComponent(escape(atob(encodedData)));
             const payload = JSON.parse(jsonString);
             
-            // Kod göster
-            const code = params.get('code') || '???';
-            document.getElementById('codeBadge').textContent = '/' + code;
+            console.log('📦 Premium Payload:', payload);
             
+            // Süre kontrolü
             if (payload.d > 0) {
+                const now = Math.floor(Date.now() / 1000);
                 const expiresAt = payload.t + payload.d;
-                startCountdown(expiresAt);
-            }
-            
-            if (payload.e === 1) {
-                // Şifreli içerik
-                document.getElementById('contentArea').innerHTML = `
-                    <div class="password-modal">
-                        <div class="icon"><i class="fa-solid fa-shield-halved"></i></div>
-                        <h3>Bu İçerik Parola İle Korunuyor</h3>
-                        <p>Lütfen erişim parolasını girin.</p>
-                        <div class="password-input-group">
-                            <input type="password" id="passInput" placeholder="Parola">
-                            <button class="btn" onclick="unlockContent()"><i class="fa-solid fa-unlock"></i> Aç</button>
+                
+                if (now > expiresAt) {
+                    // Süre dolmuş
+                    document.getElementById('contentArea').innerHTML = `
+                        <div class="expired-premium">
+                            <span class="icon"><i class="fa-solid fa-clock-rotate-left"></i></span>
+                            <h2>Bu Bağlantının Süresi Dolmuştur</h2>
+                            <p>Link süresi dolduğu için bu içeriğe artık erişilemez.</p>
+                            <div class="premium-actions" style="justify-content:center;">
+                                <a href="index.html" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Yeni Metin Oluştur</a>
+                            </div>
                         </div>
-                        <div id="decryptedContent" style="margin-top:15px; background:var(--input-bg); border-radius:12px; padding:20px; border:1px solid var(--panel-border); font-family:'Fira Code',monospace; white-space:pre-wrap; word-break:break-word; display:none;"></div>
-                    </div>
-                `;
-                window._encryptedPayload = payload.c;
+                    `;
+                    // Timer'ı gizle
+                    document.getElementById('timerDisplay').style.display = 'none';
+                } else {
+                    // Süre aktif, sayacı başlat
+                    startPremiumCountdown(expiresAt);
+                    showPremiumContent(payload);
+                }
             } else {
-                // Açık içerik
-                document.getElementById('contentArea').innerHTML = `
-                    <div class="view-content" id="textContent">${escapeHtml(payload.c)}</div>
-                `;
+                // Süresiz
+                document.getElementById('timerDisplay').style.display = 'none';
+                showPremiumContent(payload);
             }
             
         } catch(e) {
+            console.error('❌ Hata:', e);
             document.getElementById('contentArea').innerHTML = `
-                <div class="expired-section">
-                    <div class="icon"><i class="fa-solid fa-triangle-exclamation"></i></div>
-                    <h2>Geçersiz Link!</h2>
+                <div class="expired-premium">
+                    <span class="icon"><i class="fa-solid fa-triangle-exclamation"></i></span>
+                    <h2>Geçersiz Link</h2>
                     <p>Bu link geçersiz veya bozuk.</p>
-                    <a href="index.html" class="btn"><i class="fa-solid fa-plus"></i> Yeni Metin Oluştur</a>
+                    <div class="premium-actions" style="justify-content:center;">
+                        <a href="index.html" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Yeni Metin Oluştur</a>
+                    </div>
                 </div>
             `;
         }
     }
     
+    // === İÇERİK GÖSTER ===
+    function showPremiumContent(payload) {
+        const contentArea = document.getElementById('contentArea');
+        
+        if (payload.e === 1) {
+            // Şifreli içerik
+            contentArea.innerHTML = `
+                <div class="password-premium">
+                    <span class="lock-icon"><i class="fa-solid fa-shield-halved"></i></span>
+                    <h3>Bu İçerik Parola İle Korunuyor</h3>
+                    <p>Lütfen erişim parolasını girin.</p>
+                    <div class="input-group">
+                        <input type="password" id="premiumPassInput" placeholder="Parola">
+                        <button class="btn-unlock" onclick="unlockPremiumContent('${payload.c}')">
+                            <i class="fa-solid fa-unlock"></i> Aç
+                        </button>
+                    </div>
+                    <div class="decrypted-box" id="premiumDecryptedBox"></div>
+                </div>
+            `;
+        } else {
+            // Açık içerik
+            contentArea.innerHTML = `
+                <div class="meta-bar">
+                    <span class="meta-item"><i class="fa-regular fa-file-lines"></i> İçerik</span>
+                    <span class="meta-item"><i class="fa-regular fa-clock"></i> ${new Date().toLocaleString('tr-TR')}</span>
+                </div>
+                <div class="content-card" id="premiumContentCard">${escapeHtml(payload.c)}</div>
+                <div class="premium-actions">
+                    <button class="btn btn-primary" onclick="copyPremiumContent()"><i class="fa-regular fa-copy"></i> Kopyala</button>
+                    <button class="btn btn-secondary" onclick="downloadPremiumContent()"><i class="fa-regular fa-file-lines"></i> İndir</button>
+                    <a href="index.html" class="btn btn-gold"><i class="fa-solid fa-plus"></i> Yeni Metin Oluştur</a>
+                </div>
+            `;
+        }
+    }
+    
+    // === HTML ESCAPE ===
     function escapeHtml(text) {
         const div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
     }
     
-    function startCountdown(expiresAt) {
-        const container = document.getElementById('viewContainer');
-        const timerBadge = document.createElement('div');
-        timerBadge.className = 'timer-badge';
-        timerBadge.id = 'timerDisplay';
-        document.querySelector('.view-header').appendChild(timerBadge);
+    // === ŞİFRE ÇÖZ ===
+    function unlockPremiumContent(encryptedData) {
+        const pass = document.getElementById('premiumPassInput');
+        if (!pass) return;
+        
+        const password = pass.value;
+        if (!password) {
+            alert('Lütfen parolayı girin.');
+            return;
+        }
+        
+        try {
+            const bytes = CryptoJS.AES.decrypt(encryptedData, password);
+            const decryptedText = bytes.toString(CryptoJS.enc.Utf8);
+            
+            if (!decryptedText) {
+                alert('Hatalı parola!');
+                return;
+            }
+            
+            const box = document.getElementById('premiumDecryptedBox');
+            if (box) {
+                box.textContent = decryptedText;
+                box.style.display = 'block';
+                
+                // İçeriği gösteren butonlar ekle
+                const actions = document.createElement('div');
+                actions.className = 'premium-actions';
+                actions.style.marginTop = '16px';
+                actions.style.justifyContent = 'center';
+                actions.innerHTML = `
+                    <button class="btn btn-primary" onclick="copyPremiumContentFromBox()"><i class="fa-regular fa-copy"></i> Kopyala</button>
+                    <button class="btn btn-secondary" onclick="downloadPremiumContentFromBox()"><i class="fa-regular fa-file-lines"></i> İndir</button>
+                    <a href="index.html" class="btn btn-gold"><i class="fa-solid fa-plus"></i> Yeni Metin Oluştur</a>
+                `;
+                box.parentNode.appendChild(actions);
+                
+                // İçeriği global olarak sakla
+                window._premiumDecryptedText = decryptedText;
+            }
+        } catch(e) {
+            alert('Hatalı parola!');
+        }
+    }
+    
+    // === KOPYALA (Açık içerik) ===
+    function copyPremiumContent() {
+        const card = document.getElementById('premiumContentCard');
+        if (card) {
+            navigator.clipboard.writeText(card.textContent);
+        }
+    }
+    
+    // === İNDİR (Açık içerik) ===
+    function downloadPremiumContent() {
+        const card = document.getElementById('premiumContentCard');
+        if (!card) return;
+        const text = card.textContent;
+        if (!text.trim()) return;
+        const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `turhan_${new Date().toISOString().slice(0,10)}.txt`;
+        link.click();
+        URL.revokeObjectURL(link.href);
+    }
+    
+    // === KOPYALA (Şifreli çözülen) ===
+    function copyPremiumContentFromBox() {
+        const text = window._premiumDecryptedText;
+        if (text) {
+            navigator.clipboard.writeText(text);
+        }
+    }
+    
+    // === İNDİR (Şifreli çözülen) ===
+    function downloadPremiumContentFromBox() {
+        const text = window._premiumDecryptedText;
+        if (!text || !text.trim()) return;
+        const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `turhan_${new Date().toISOString().slice(0,10)}.txt`;
+        link.click();
+        URL.revokeObjectURL(link.href);
+    }
+    
+    // === SÜRE SAYACI (Premium) ===
+    let premiumCountdownInterval = null;
+    
+    function startPremiumCountdown(expiresAt) {
+        const timerDisplay = document.getElementById('timerDisplay');
+        const timerText = document.getElementById('timerText');
+        
+        if (!timerDisplay || !timerText) return;
+        
+        timerDisplay.style.display = 'inline-flex';
+        
+        if (premiumCountdownInterval) {
+            clearInterval(premiumCountdownInterval);
+            premiumCountdownInterval = null;
+        }
         
         const updateTimer = () => {
             const now = Math.floor(Date.now() / 1000);
             const diff = expiresAt - now;
             
             if (diff <= 0) {
-                clearInterval(window._countdownInterval);
+                clearInterval(premiumCountdownInterval);
+                premiumCountdownInterval = null;
+                timerDisplay.style.display = 'none';
+                
                 document.getElementById('contentArea').innerHTML = `
-                    <div class="expired-section">
-                        <div class="icon"><i class="fa-solid fa-clock-rotate-left"></i></div>
-                        <h2>Bu Bağlantının Süresi Dolmuştur!</h2>
+                    <div class="expired-premium">
+                        <span class="icon"><i class="fa-solid fa-clock-rotate-left"></i></span>
+                        <h2>Bu Bağlantının Süresi Dolmuştur</h2>
                         <p>Link süresi dolduğu için bu içeriğe artık erişilemez.</p>
-                        <a href="index.html" class="btn"><i class="fa-solid fa-plus"></i> Yeni İçerik Oluştur</a>
+                        <div class="premium-actions" style="justify-content:center;">
+                            <a href="index.html" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Yeni Metin Oluştur</a>
+                        </div>
                     </div>
                 `;
-                document.getElementById('timerDisplay')?.remove();
                 return;
             }
             
-            const days = Math.floor(diff / (24 * 3600));
-            const hours = Math.floor((diff % (24 * 3600)) / 3600);
-            const minutes = Math.floor((diff % 3600) / 60);
+            const minutes = Math.floor(diff / 60);
             const seconds = diff % 60;
             
-            let timeStr = "";
-            if (days > 0) timeStr += `${days}g `;
-            if (hours > 0 || days > 0) timeStr += `${hours}sa `;
-            timeStr += `${minutes}dk ${seconds < 10 ? '0' : ''}${seconds}sn`;
+            let timeStr = '';
+            if (minutes > 0) {
+                timeStr += `${minutes}dk `;
+            }
+            timeStr += `${seconds}sn`;
             
-            timerBadge.innerHTML = `<i class="fa-solid fa-stopwatch"></i> Kalan Süre: ${timeStr}`;
-            timerBadge.classList.toggle('urgent', diff < 300);
+            timerText.textContent = `Kalan Süre: ${timeStr}`;
+            timerDisplay.classList.toggle('urgent', diff < 300);
         };
         
         updateTimer();
-        window._countdownInterval = setInterval(updateTimer, 1000);
+        premiumCountdownInterval = setInterval(updateTimer, 1000);
     }
     
-    function unlockContent() {
-        const pass = document.getElementById('passInput').value;
-        if (!pass) return alert('Lütfen parolayı girin.');
-        
-        try {
-            const bytes = CryptoJS.AES.decrypt(window._encryptedPayload, pass);
-            const decryptedText = bytes.toString(CryptoJS.enc.Utf8);
-            
-            if (!decryptedText) return alert('Hatalı parola!');
-            
-            const el = document.getElementById('decryptedContent');
-            el.textContent = decryptedText;
-            el.style.display = 'block';
-            
-            // Ayrıca textContent olarak da sakla
-            window._decryptedText = decryptedText;
-        } catch(e) {
-            alert('Hatalı parola!');
-        }
-    }
-    
+    // === KOPYALA (Global) ===
     function copyContent() {
-        const content = document.getElementById('textContent');
-        if (content) {
-            navigator.clipboard.writeText(content.textContent);
+        const card = document.getElementById('premiumContentCard');
+        const box = document.getElementById('premiumDecryptedBox');
+        
+        if (card) {
+            navigator.clipboard.writeText(card.textContent);
+        } else if (box && box.style.display !== 'none') {
+            navigator.clipboard.writeText(box.textContent);
         } else {
-            const decrypted = document.getElementById('decryptedContent');
-            if (decrypted && decrypted.style.display !== 'none') {
-                navigator.clipboard.writeText(decrypted.textContent);
-            }
+            alert('Kopyalanacak içerik yok!');
         }
     }
     
+    // === İNDİR (Global) ===
     function downloadContent() {
-        const content = document.getElementById('textContent');
+        const card = document.getElementById('premiumContentCard');
+        const box = document.getElementById('premiumDecryptedBox');
+        
         let text = '';
-        if (content) {
-            text = content.textContent;
-        } else {
-            const decrypted = document.getElementById('decryptedContent');
-            if (decrypted && decrypted.style.display !== 'none') {
-                text = decrypted.textContent;
-            }
+        if (card) {
+            text = card.textContent;
+        } else if (box && box.style.display !== 'none') {
+            text = box.textContent;
         }
         
-        if (!text) return alert('İndirilecek içerik yok!');
+        if (!text || !text.trim()) {
+            alert('İndirilecek içerik yok!');
+            return;
+        }
         
         const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
         const link = document.createElement('a');
@@ -380,6 +787,9 @@
         link.click();
         URL.revokeObjectURL(link.href);
     }
+    
+    console.log('✅ Turhan TV HD Premium View başlatıldı!');
+    console.log('📝 Kod:', code);
 </script>
 
 </body>
