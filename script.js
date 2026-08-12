@@ -9,7 +9,10 @@ let statsTimeout = null;
 
 // === ZAMAN GÖSTERİCİ ===
 const updateClock = () => {
-    document.getElementById('currentTime').textContent = new Date().toLocaleTimeString('tr-TR');
+    const timeElement = document.getElementById('currentTime');
+    if (timeElement) {
+        timeElement.textContent = new Date().toLocaleTimeString('tr-TR');
+    }
 };
 setInterval(updateClock, 1000);
 updateClock();
@@ -23,11 +26,17 @@ const updateStats = () => {
         const words = text.trim() ? text.trim().split(/\s+/).length : 0;
         const lines = text ? text.split('\n').length : 0;
 
-        document.getElementById('charCount').textContent = `Karakter: ${charCount}`;
-        document.getElementById('wordCount').textContent = `Kelime: ${words}`;
-        document.getElementById('lineCount').textContent = `Satır: ${lines}`;
-        document.getElementById('wordCounter').textContent = `${charCount} karakter`;
-        document.getElementById('wordCounterStatus').textContent = `${words} kelime`;
+        const charCountEl = document.getElementById('charCount');
+        const wordCountEl = document.getElementById('wordCount');
+        const lineCountEl = document.getElementById('lineCount');
+        const wordCounterEl = document.getElementById('wordCounter');
+        const wordCounterStatusEl = document.getElementById('wordCounterStatus');
+
+        if (charCountEl) charCountEl.textContent = `Karakter: ${charCount}`;
+        if (wordCountEl) wordCountEl.textContent = `Kelime: ${words}`;
+        if (lineCountEl) lineCountEl.textContent = `Satır: ${lines}`;
+        if (wordCounterEl) wordCounterEl.textContent = `${charCount} karakter`;
+        if (wordCounterStatusEl) wordCounterStatusEl.textContent = `${words} kelime`;
     }, 50);
 };
 
@@ -162,7 +171,7 @@ const exportText = () => {
     URL.revokeObjectURL(link.href);
 };
 
-// === KISA LİNK OLUŞTUR ===
+// === KISA LİNK OLUŞTUR (DÜZELTİLDİ) ===
 const generateShareLink = () => {
     const text = editor.value;
     if (!text.trim()) {
@@ -181,9 +190,13 @@ const generateShareLink = () => {
         const shareInput = document.getElementById('shareUrl');
         if (shareInput) {
             shareInput.value = shortUrl;
-            document.getElementById('shareBox').style.display = 'block';
+            const shareBox = document.getElementById('shareBox');
+            if (shareBox) {
+                shareBox.style.display = 'block';
+            }
         }
 
+        // Otomatik kopyala
         setTimeout(() => {
             navigator.clipboard.writeText(shortUrl).catch(() => {});
         }, 50);
@@ -208,9 +221,11 @@ const shareViaSocial = () => {
 
 const copyLink = () => {
     const copyText = document.getElementById('shareUrl');
-    copyText.select();
-    navigator.clipboard.writeText(copyText.value);
-    alert('Link kopyalandı!');
+    if (copyText) {
+        copyText.select();
+        navigator.clipboard.writeText(copyText.value);
+        alert('Link kopyalandı!');
+    }
 };
 
 // === İÇERİK KOPYALA ===
@@ -240,7 +255,10 @@ const clearEditor = () => {
         saveState();
         editor.value = '';
         updateStats();
-        document.getElementById('shareBox').style.display = 'none';
+        const shareBox = document.getElementById('shareBox');
+        if (shareBox) {
+            shareBox.style.display = 'none';
+        }
     }
 };
 
@@ -269,20 +287,27 @@ document.addEventListener('keydown', (e) => {
                 break;
             case 'f':
                 e.preventDefault();
-                document.querySelector('.app-container').requestFullscreen?.();
+                const container = document.querySelector('.app-container');
+                if (container) {
+                    container.requestFullscreen?.();
+                }
                 break;
         }
     }
 });
 
-// === LİNK KONTROL ===
+// === LİNK KONTROL (DÜZELTİLDİ) ===
 window.addEventListener('DOMContentLoaded', function() {
     const params = new URLSearchParams(window.location.search);
     const code = params.get('s');
     
+    console.log('🔗 URL parametresi s:', code);
+    
     if (code && typeof getLinkData === 'function') {
         const data = getLinkData(code);
+        
         if (data) {
+            // Tıklanma sayısını artır
             data.clicks = (data.clicks || 0) + 1;
             localStorage.setItem('turhan_short_links', JSON.stringify(linkDB));
             
@@ -290,46 +315,96 @@ window.addEventListener('DOMContentLoaded', function() {
                 const jsonString = decodeURIComponent(escape(atob(data.data)));
                 const payload = JSON.parse(jsonString);
                 
-                document.getElementById('editorSection').style.display = 'none';
+                console.log('📦 Payload:', payload);
+                console.log('⏱️ Süre (d):', payload.d);
+                console.log('🕐 Oluşturulma (t):', payload.t);
                 
-                if (payload.d > 0) {
-                    const expiresAt = payload.t + payload.d;
-                    startCountdown(expiresAt);
+                // Editörü gizle
+                const editorSection = document.getElementById('editorSection');
+                if (editorSection) {
+                    editorSection.style.display = 'none';
                 }
                 
-                if (payload.e === 1) {
-                    encryptedDataPayload = payload.c;
-                    document.getElementById('textContent').innerHTML = `
-                        <div style="text-align:center; padding:20px;">
-                            <i class="fa-solid fa-shield-halved" style="font-size:3rem; color:var(--accent); margin-bottom:16px;"></i>
-                            <h3>Bu İçerik Parola İle Korunuyor</h3>
-                            <p style="color:var(--text-muted); margin-bottom:20px;">Lütfen erişim parolasını girin.</p>
-                            <div style="max-width:360px; margin:0 auto; display:flex; gap:10px;">
-                                <input type="password" id="inputDecryptPassword" placeholder="Parola" style="flex:1; padding:10px; border-radius:8px; border:1px solid var(--panel-border); background:var(--input-bg); color:var(--text-main); outline:none;">
-                                <button class="btn" onclick="unlockContent()"><i class="fa-solid fa-unlock"></i> Aç</button>
+                // İçeriği göster
+                const viewSection = document.getElementById('viewSection');
+                const textContent = document.getElementById('textContent');
+                const expiredSection = document.getElementById('expiredSection');
+                
+                if (viewSection && textContent) {
+                    viewSection.style.display = 'block';
+                    if (expiredSection) {
+                        expiredSection.style.display = 'none';
+                    }
+                    
+                    if (payload.e === 1) {
+                        // Şifreli içerik
+                        encryptedDataPayload = payload.c;
+                        textContent.innerHTML = `
+                            <div style="text-align:center; padding:20px;">
+                                <i class="fa-solid fa-shield-halved" style="font-size:3rem; color:var(--accent); margin-bottom:16px;"></i>
+                                <h3>Bu İçerik Parola İle Korunuyor</h3>
+                                <p style="color:var(--text-muted); margin-bottom:20px;">Lütfen erişim parolasını girin.</p>
+                                <div style="max-width:360px; margin:0 auto; display:flex; gap:10px;">
+                                    <input type="password" id="inputDecryptPassword" placeholder="Parola" style="flex:1; padding:10px; border-radius:8px; border:1px solid var(--panel-border); background:var(--input-bg); color:var(--text-main); outline:none;">
+                                    <button class="btn" onclick="unlockContent()"><i class="fa-solid fa-unlock"></i> Aç</button>
+                                </div>
+                                <div id="decryptedContent" style="margin-top:15px; background:var(--input-bg); border-radius:12px; padding:20px; border:1px solid var(--panel-border); font-family:'Fira Code',monospace; white-space:pre-wrap; word-break:break-word; display:none;"></div>
                             </div>
-                            <div id="decryptedContent" style="margin-top:15px; background:var(--input-bg); border-radius:12px; padding:20px; border:1px solid var(--panel-border); font-family:'Fira Code',monospace; white-space:pre-wrap; word-break:break-word; display:none;"></div>
-                        </div>
-                    `;
-                    document.getElementById('viewSection').style.display = 'block';
-                } else {
-                    showContent(payload.c);
+                        `;
+                    } else {
+                        textContent.textContent = payload.c;
+                    }
+                    
+                    // Süre göster - DÜZELTİLDİ
+                    if (payload.d > 0) {
+                        const timerDisplay = document.getElementById('timerDisplay');
+                        if (timerDisplay) {
+                            const expiresAt = payload.t + payload.d;
+                            console.log('⏳ Süre başlatılıyor, expiresAt:', expiresAt);
+                            startCountdown(expiresAt);
+                        }
+                    }
                 }
             } catch(e) {
+                console.error('❌ Link çözümleme hatası:', e);
                 alert('Geçersiz link!');
             }
         } else {
-            document.getElementById('editorSection').style.display = 'none';
-            document.getElementById('expiredSection').style.display = 'block';
+            // Link süresi dolmuş veya geçersiz
+            console.log('❌ Link geçersiz veya süresi dolmuş');
+            const editorSection = document.getElementById('editorSection');
+            const expiredSection = document.getElementById('expiredSection');
+            if (editorSection) {
+                editorSection.style.display = 'none';
+            }
+            if (expiredSection) {
+                expiredSection.style.display = 'block';
+            }
         }
+    } else {
+        console.log('📝 Kısa link parametresi yok, normal mod');
+        // Normal mod - sadece editörü göster
+        updateStats();
+        saveState();
     }
 });
 
-// === SÜRE SAYACI ===
+// === SÜRE SAYACI (DÜZELTİLDİ) ===
 function startCountdown(expiresAt) {
     const timerBadge = document.getElementById('timerDisplay');
-    if (!timerBadge) return;
+    if (!timerBadge) {
+        console.log('❌ timerDisplay bulunamadı');
+        return;
+    }
+    
+    // Önceki interval'i temizle
+    if (countdownInterval) {
+        clearInterval(countdownInterval);
+        countdownInterval = null;
+    }
+    
     timerBadge.style.display = 'inline-flex';
+    console.log('✅ Sayaç başlatıldı, expiresAt:', expiresAt);
     
     const updateTimer = () => {
         const now = Math.floor(Date.now() / 1000);
@@ -337,8 +412,18 @@ function startCountdown(expiresAt) {
         
         if (diff <= 0) {
             clearInterval(countdownInterval);
-            document.getElementById('viewSection').style.display = 'none';
-            document.getElementById('expiredSection').style.display = 'block';
+            countdownInterval = null;
+            timerBadge.style.display = 'none';
+            
+            const viewSection = document.getElementById('viewSection');
+            const expiredSection = document.getElementById('expiredSection');
+            if (viewSection) {
+                viewSection.style.display = 'none';
+            }
+            if (expiredSection) {
+                expiredSection.style.display = 'block';
+            }
+            console.log('⏰ Süre doldu!');
             return;
         }
         
@@ -356,17 +441,23 @@ function startCountdown(expiresAt) {
         timerBadge.classList.toggle('urgent', diff < 300);
     };
     
+    // Hemen güncelle
     updateTimer();
+    
+    // Yeni interval başlat
     countdownInterval = setInterval(updateTimer, 1000);
 }
 
 // === ŞİFRE ÇÖZME ===
 function unlockContent() {
-    const pass = document.getElementById('inputDecryptPassword').value;
+    const pass = document.getElementById('inputDecryptPassword');
     if (!pass) return alert('Lütfen parolayı girin.');
     
+    const password = pass.value;
+    if (!password) return alert('Lütfen parolayı girin.');
+    
     try {
-        const bytes = CryptoJS.AES.decrypt(encryptedDataPayload, pass);
+        const bytes = CryptoJS.AES.decrypt(encryptedDataPayload, password);
         const decryptedText = bytes.toString(CryptoJS.enc.Utf8);
         
         if (!decryptedText) return alert('Hatalı parola!');
@@ -383,18 +474,37 @@ function unlockContent() {
 
 // === İÇERİK GÖSTERME ===
 function showContent(text) {
-    document.getElementById('viewSection').style.display = 'block';
-    document.getElementById('textContent').textContent = text;
+    const viewSection = document.getElementById('viewSection');
+    const textContent = document.getElementById('textContent');
+    const expiredSection = document.getElementById('expiredSection');
+    
+    if (viewSection) {
+        viewSection.style.display = 'block';
+    }
+    if (expiredSection) {
+        expiredSection.style.display = 'none';
+    }
+    if (textContent) {
+        textContent.textContent = text;
+    }
     
     const charCount = text.length;
     const words = text.trim() ? text.trim().split(/\s+/).length : 0;
     const lines = text ? text.split('\n').length : 0;
 
-    document.getElementById('charCount').textContent = `Karakter: ${charCount}`;
-    document.getElementById('wordCount').textContent = `Kelime: ${words}`;
-    document.getElementById('lineCount').textContent = `Satır: ${lines}`;
-    document.getElementById('wordCounterStatus').textContent = `${words} kelime`;
+    const charCountEl = document.getElementById('charCount');
+    const wordCountEl = document.getElementById('wordCount');
+    const lineCountEl = document.getElementById('lineCount');
+    const wordCounterStatusEl = document.getElementById('wordCounterStatus');
+
+    if (charCountEl) charCountEl.textContent = `Karakter: ${charCount}`;
+    if (wordCountEl) wordCountEl.textContent = `Kelime: ${words}`;
+    if (lineCountEl) lineCountEl.textContent = `Satır: ${lines}`;
+    if (wordCounterStatusEl) wordCounterStatusEl.textContent = `${words} kelime`;
 }
 
 // İlk state
 setTimeout(saveState, 50);
+
+console.log('✅ Turhan TV HD Pro başlatıldı!');
+console.log('📝 Kısa link sistemi aktif.');
