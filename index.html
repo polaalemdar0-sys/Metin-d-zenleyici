@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Turhan TV HD Pro - Metin & Kod Düzenleyici</title>
-    <link rel="stylesheet" href="style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -29,6 +29,7 @@
     </div>
 
     <div class="app-body">
+        <!-- EDITÖR MODU -->
         <div id="editorSection">
             <div class="pro-panel">
                 <div class="pro-panel-title">
@@ -126,6 +127,32 @@
                     <i class="fa-solid fa-check-circle"></i>
                     <span>Kendi kısa link sistemimiz - Turhan TV HD Özel</span>
                 </div>
+            </div>
+        </div>
+
+        <!-- SÜRESİ DOLMUŞ KUTUSU -->
+        <div id="expiredSection" class="expired-section" style="display:none;">
+            <div class="icon"><i class="fa-solid fa-clock-rotate-left"></i></div>
+            <h2>Bu Bağlantının Süresi Dolmuştur!</h2>
+            <p>Link süresi dolduğu için bu içeriğe artık erişilemez.</p>
+            <a href="index.html" class="btn"><i class="fa-solid fa-plus"></i> Yeni İçerik Oluştur</a>
+        </div>
+
+        <!-- OKUMA MODU -->
+        <div id="viewSection" style="display:none;">
+            <div style="margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+                <span style="font-weight: 600; color: var(--text-muted); font-size: 0.9rem;">
+                    <i class="fa-solid fa-file-contract"></i> Turhan TV HD Paylaşılan İçerik
+                </span>
+                <div id="timerDisplay" class="timer-badge" style="display:none;"></div>
+            </div>
+            <div class="view-card" id="textContent"></div>
+            <div class="action-bar" style="margin-top: 20px;">
+                <div class="btn-group">
+                    <button class="btn btn-secondary" onclick="copyContent()"><i class="fa-solid fa-copy"></i> İçeriği Kopyala</button>
+                    <button class="btn btn-secondary" onclick="exportViewContent()"><i class="fa-solid fa-download"></i> İndir</button>
+                </div>
+                <a href="index.html" class="btn" style="text-decoration: none;"><i class="fa-solid fa-plus"></i> Yeni Metin Oluştur</a>
             </div>
         </div>
     </div>
