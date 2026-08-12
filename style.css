@@ -300,6 +300,77 @@ textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent
     color: var(--success);
 }
 
+.view-card {
+    background: var(--input-bg);
+    border: 1px solid var(--panel-border);
+    border-radius: 14px;
+    padding: 24px;
+    min-height: 220px;
+    max-height: 500px;
+    overflow-y: auto;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.view-card::-webkit-scrollbar {
+    width: 6px;
+}
+.view-card::-webkit-scrollbar-track {
+    background: var(--input-bg);
+    border-radius: 10px;
+}
+.view-card::-webkit-scrollbar-thumb {
+    background: var(--panel-border);
+    border-radius: 10px;
+}
+
+.timer-badge {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--danger);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    padding: 5px 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.timer-badge.urgent {
+    background: rgba(239, 68, 68, 0.2);
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+}
+
+.expired-section {
+    text-align: center;
+    padding: 50px 20px;
+}
+
+.expired-section .icon {
+    font-size: 4rem;
+    color: var(--danger);
+    margin-bottom: 16px;
+}
+
+.expired-section h2 {
+    margin-bottom: 8px;
+    font-size: 1.5rem;
+}
+
+.expired-section p {
+    color: var(--text-muted);
+    margin-bottom: 24px;
+}
+
 .status-bar {
     padding: 8px 24px;
     background: var(--input-bg);
