@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editör Pro - Gelişmiş Metin & Kod Paylaşımı</title>
+    <title>Turhan TV HD - Metin & Kod Düzenleyici</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
@@ -180,8 +180,8 @@
 <div class="app-container">
     <div class="app-header">
         <div class="brand">
-            <div class="brand-icon"><i class="fa-solid fa-code"></i></div>
-            <span>Editör Pro</span>
+            <div class="brand-icon"><i class="fa-solid fa-tv"></i></div>
+            <span>Turhan TV HD Metin Düzenleyici Özel</span>
         </div>
         <div class="header-actions">
             <button class="btn btn-secondary" onclick="toggleTheme()">
@@ -218,7 +218,7 @@
                 </div>
             </div>
 
-            <textarea id="editor" placeholder="Metninizi yazın veya dosya yükleyin..." oninput="updateStats()"></textarea>
+            <textarea id="editor" placeholder="Metninizi veya kodunuzu buraya yazın..." oninput="updateStats()"></textarea>
             
             <div class="action-bar">
                 <button class="btn" onclick="generateShareLink()">
@@ -230,7 +230,7 @@
             </div>
 
             <div class="share-box" id="shareBox">
-                <p style="font-size: 0.85rem; color: var(--text-muted);">Paylaşıma Hazır Bağlantınız:</p>
+                <p style="font-size: 0.85rem; color: var(--text-muted);">Paylaşıma Hazır Turhan TV HD Bağlantınız:</p>
                 <div class="share-input-group">
                     <input type="text" id="shareUrl" readonly>
                     <button class="btn" onclick="copyLink()"><i class="fa-solid fa-copy"></i> Kopyala</button>
@@ -241,9 +241,9 @@
         <!-- SÜRESİ DOLMUŞ KUTUSU -->
         <div id="expiredSection" style="text-align:center; padding: 40px 10px;">
             <i class="fa-solid fa-clock-rotate-left" style="font-size: 3.5rem; color: var(--danger); margin-bottom: 16px;"></i>
-            <h2 style="margin-bottom: 8px;">Bu Bağlantının Süresi Dolmuştur!</h2>
+            <h2 style="margin-bottom: 8px;">Bu Bağlantının Süresi Dolmıştır!</h2>
             <p style="color: var(--text-muted); margin-bottom: 24px;">Belirlenen geçerlilik süresi tamamlandığı için bu içeriğe artık erişilemez.</p>
-            <a href="index.html" class="btn"><i class="fa-solid fa-plus"></i> Yeni Metin Oluştur</a>
+            <a href="index.html" class="btn"><i class="fa-solid fa-plus"></i> Yeni İçerik Oluştur</a>
         </div>
 
         <!-- PAROLA MODAL -->
@@ -251,7 +251,7 @@
             <div style="text-align: center; padding: 30px 10px;">
                 <i class="fa-solid fa-shield-halved" style="font-size: 3rem; color: var(--accent); margin-bottom: 16px;"></i>
                 <h3 style="margin-bottom: 8px;">Bu İçerik Parola İle Korunuyor</h3>
-                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">Lütfen parolayı girin.</p>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">Lütfen erişim parolasını girin.</p>
                 <div style="max-width: 320px; margin: 0 auto; display: flex; gap: 8px;">
                     <input type="password" id="inputDecryptPassword" placeholder="Parola" style="flex:1; padding:10px; border-radius:8px; border:1px solid var(--panel-border); background:var(--input-bg); color:var(--text-main); outline:none;">
                     <button class="btn" onclick="unlockContent()">Aç</button>
@@ -262,7 +262,7 @@
         <!-- OKUMA MODU -->
         <div id="viewSection">
             <div style="margin-bottom: 14px; font-weight: 600; color: var(--text-muted); font-size: 0.9rem; display: flex; align-items: center; justify-content: space-between;">
-                <span><i class="fa-solid fa-file-contract"></i> Paylaşılan İçerik</span>
+                <span><i class="fa-solid fa-file-contract"></i> Turhan TV HD Paylaşılan İçerik</span>
                 <div id="timerDisplay" class="timer-badge" style="display:none;"></div>
             </div>
             
@@ -281,7 +281,7 @@
             <span id="wordCount">Kelime: 0</span>
             <span id="lineCount">Satır: 0</span>
         </div>
-        <div>UTF-8</div>
+        <div>Turhan TV HD Özel | UTF-8</div>
     </div>
 </div>
 
@@ -366,7 +366,7 @@
         const shortUrl = await shortenUrl(fullUrl);
 
         shareInput.value = shortUrl;
-        navigator.clipboard.writeText(shortUrl).then(() => alert('Kısaltılmış özel bağlantınız kopyalandı!')).catch(() => {});
+        navigator.clipboard.writeText(shortUrl).then(() => alert('Turhan TV HD özel kısa bağlantınız kopyalandı!')).catch(() => {});
     }
 
     // SAYFA YÜKLENDİĞİNDE SÜRE VE ŞİFRE KONTROLÜ
