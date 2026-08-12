@@ -36,9 +36,14 @@ function generateShortCode() {
     return code.padStart(8, '0');
 }
 
-// Kısa link oluştur
+// Kısa link oluştur - DÜZELTİLDİ
 function createShortLink(text, password, duration) {
+    // createdAt'i şimdiki zaman olarak ayarla
     const createdAt = Math.floor(Date.now() / 1000);
+    console.log('🔨 Link oluşturuluyor...');
+    console.log('📅 Oluşturulma zamanı:', createdAt);
+    console.log('⏱️ Süre (saniye):', duration);
+    
     let content = text;
     let encrypted = 0;
     
@@ -53,6 +58,8 @@ function createShortLink(text, password, duration) {
         t: createdAt,
         d: duration
     };
+    
+    console.log('📦 Payload:', payload);
     
     const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
     
@@ -71,6 +78,9 @@ function createShortLink(text, password, duration) {
     
     localStorage.setItem('turhan_short_links', JSON.stringify(linkDB));
     
+    console.log('✅ Link kaydedildi:', code);
+    console.log('💾 Veritabanı:', linkDB[code]);
+    
     // Link'i oluştur
     const baseUrl = window.location.origin + window.location.pathname;
     return baseUrl + '?s=' + code;
@@ -78,32 +88,36 @@ function createShortLink(text, password, duration) {
 
 // Link verisini al - DÜZELTİLDİ
 function getLinkData(code) {
+    console.log('🔍 Link aranıyor:', code);
+    
     const data = linkDB[code];
     if (!data) {
-        console.log('Link bulunamadı:', code);
+        console.log('❌ Link bulunamadı:', code);
         return null;
     }
     
-    console.log('Link verisi:', data);
-    console.log('Şu anki zaman:', Math.floor(Date.now() / 1000));
-    console.log('Oluşturulma:', data.created);
-    console.log('Süre:', data.duration);
-    console.log('Bitiş:', data.created + data.duration);
+    console.log('📦 Link verisi:', data);
+    console.log('📅 Oluşturulma:', data.created);
+    console.log('⏱️ Süre:', data.duration);
     
     // Süre kontrolü - DÜZELTİLDİ
     if (data.duration > 0) {
         const now = Math.floor(Date.now() / 1000);
         const expiresAt = data.created + data.duration;
         
+        console.log('🕐 Şu an:', now);
+        console.log('⏰ Bitiş zamanı:', expiresAt);
+        console.log('📊 Kalan süre:', expiresAt - now, 'saniye');
+        
         if (now > expiresAt) {
             data.active = false;
             localStorage.setItem('turhan_short_links', JSON.stringify(linkDB));
-            console.log('LİNK SÜRESİ DOLMUŞ!');
+            console.log('❌ LİNK SÜRESİ DOLMUŞ!');
             return null;
         }
-        console.log('Link geçerli, kalan süre:', expiresAt - now, 'saniye');
+        console.log('✅ Link geçerli');
     } else {
-        console.log('Süresiz link');
+        console.log('♾️ Süresiz link');
     }
     
     return data;
