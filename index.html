@@ -602,7 +602,7 @@
                 </div>
                 <div class="short-link-info">
                     <i class="fa-solid fa-check-circle"></i>
-                    <span>Kendi kısa link sistemimiz ile oluşturuldu - Turhan TV HD Özel</span>
+                    <span>Token tabanlı kısa link sistemi - Turhan TV HD Özel</span>
                 </div>
             </div>
         </div>
@@ -611,7 +611,7 @@
         <div id="expiredSection" class="expired-section">
             <div class="icon"><i class="fa-solid fa-clock-rotate-left"></i></div>
             <h2>Bu Bağlantının Süresi Dolmuştur!</h2>
-            <p>Belirlenen geçerlilik süresi tamamlandığı için bu içeriğe artık erişilemez.</p>
+            <p>Token süresi dolduğu için bu içeriğe artık erişilemez.</p>
             <a href="index.html" class="btn"><i class="fa-solid fa-plus"></i> Yeni İçerik Oluştur</a>
         </div>
 
@@ -660,71 +660,105 @@
 </div>
 
 <script>
-    // === KENDİ KISA LINK SİSTEMİ ===
-    const shortLinkDB = new Map();
-    let shortLinkCounter = 0;
+    // === TOKEN TABANLI KISA LINK SİSTEMİ ===
     const BASE62 = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-
-    // Base62 kodlama - hızlı ve benzersiz
-    function encodeBase62(num) {
-        if (num === 0) return '0';
+    
+    // Token oluşturma: Zaman + Süre bilgisi içerir
+    function createToken(createdAt, durationSeconds) {
+        // created at ve duration'ı birleştir
+        const data = `${createdAt}:${durationSeconds}`;
+        
+        // Base62 encode et (kısa token)
         let encoded = '';
-        while (num > 0) {
-            encoded = BASE62[num % 62] + encoded;
-            num = Math.floor(num / 62);
+        for (let i = 0; i < data.length; i++) {
+            const charCode = data.charCodeAt(i);
+            encoded += BASE62[charCode % 62];
         }
-        return encoded;
+        
+        // Benzersizlik için hash ekle
+        const hash = Math.random().toString(36).substring(2, 4);
+        const token = encoded.slice(0, 6) + hash;
+        
+        return token;
     }
 
-    // Benzersiz kısa kod oluşturma
-    function generateShortCode() {
-        shortLinkCounter++;
-        // Zaman damgası + sayaç ile benzersizlik
-        const timestamp = Date.now().toString(36);
-        const counter = encodeBase62(shortLinkCounter);
-        // Karıştır ve kısalt
-        const combined = timestamp + counter;
-        // 6-8 karakter uzunluğunda kod
-        let shortCode = '';
-        for (let i = 0; i < combined.length; i++) {
-            const charCode = combined.charCodeAt(i);
-            shortCode += BASE62[charCode % 62];
+    // Token'dan bilgileri çöz
+    function decodeToken(token) {
+        try {
+            // Token'ı çöz
+            let decoded = '';
+            for (let i = 0; i < token.length; i++) {
+                const char = token[i];
+                const index = BASE62.indexOf(char);
+                if (index !== -1) {
+                    decoded += String.fromCharCode(33 + index);
+                }
+            }
+            
+            // createdAt ve duration'ı bul
+            const parts = decoded.split(':');
+            if (parts.length === 2) {
+                const createdAt = parseInt(parts[0]);
+                const durationSeconds = parseInt(parts[1]);
+                if (!isNaN(createdAt) && !isNaN(durationSeconds)) {
+                    return { createdAt, durationSeconds };
+                }
+            }
+            return null;
+        } catch {
+            return null;
         }
-        // Maksimum 8 karakter
-        return shortCode.slice(0, 8);
     }
 
-    // Kısa link oluşturma
-    function createShortLink(fullUrl) {
-        let shortCode = generateShortCode();
+    // Token geçerlilik kontrolü
+    function isTokenValid(token) {
+        const info = decodeToken(token);
+        if (!info) return false;
         
-        // Çakışma kontrolü
-        while (shortLinkDB.has(shortCode)) {
-            shortCode = generateShortCode();
-        }
+        const { createdAt, durationSeconds } = info;
         
-        // Veritabanına kaydet
-        shortLinkDB.set(shortCode, {
-            url: fullUrl,
-            created: Date.now(),
-            accessCount: 0
-        });
+        // Süresiz ise her zaman geçerli
+        if (durationSeconds === 0) return true;
         
-        // Kısa link URL'si oluştur
+        const now = Math.floor(Date.now() / 1000);
+        const expiresAt = createdAt + durationSeconds;
+        
+        return now < expiresAt;
+    }
+
+    // Token oluştur ve URL'ye ekle
+    function createTokenUrl(createdAt, durationSeconds, payload) {
+        // Token oluştur
+        const token = createToken(createdAt, durationSeconds);
+        
+        // Payload'ı base64 encode et
+        const encodedData = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+        
+        // URL oluştur: /?t=TOKEN&d=DATA
         const baseUrl = window.location.origin + window.location.pathname;
-        const shortUrl = baseUrl + '?s=' + shortCode;
-        
-        return shortUrl;
+        return `${baseUrl}?t=${token}&d=${encodedData}`;
     }
 
-    // Kısa link'ten orijinal URL'yi bul
-    function getOriginalUrl(shortCode) {
-        const data = shortLinkDB.get(shortCode);
-        if (data) {
-            data.accessCount++;
-            return data.url;
+    // URL'den token ve veriyi çöz
+    function parseTokenUrl() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('t');
+        const data = urlParams.get('d');
+        
+        if (!token || !data) return null;
+        
+        // Token geçerlilik kontrolü
+        if (!isTokenValid(token)) {
+            return { error: 'expired' };
         }
-        return null;
+        
+        try {
+            const jsonString = decodeURIComponent(escape(atob(data)));
+            const payload = JSON.parse(jsonString);
+            return { token, payload };
+        } catch {
+            return { error: 'invalid' };
+        }
     }
 
     // === HIZLI PROFESYONEL SİSTEM ===
@@ -910,7 +944,7 @@
         URL.revokeObjectURL(link.href);
     };
 
-    // === HIZLI BAĞLANTI OLUŞTURMA (Kendi Kısa Link Sistemimiz ile) ===
+    // === TOKEN TABANLI BAĞLANTI OLUŞTURMA ===
     const generateShareLink = () => {
         const text = editor.value;
         if (!text.trim()) return alert('Lütfen bir metin yazın veya dosya yükleyin!');
@@ -931,16 +965,11 @@
 
         const payload = {
             c: finalContent,
-            e: isEncrypted ? 1 : 0,
-            t: createdAt,
-            d: durationSeconds
+            e: isEncrypted ? 1 : 0
         };
 
-        const encodedData = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
-        const fullUrl = window.location.origin + window.location.pathname + '#' + encodedData;
-
-        // === KENDİ KISA LINK SİSTEMİ ===
-        const shortUrl = createShortLink(fullUrl);
+        // Token tabanlı URL oluştur
+        const shortUrl = createTokenUrl(createdAt, durationSeconds, payload);
 
         const shareInput = document.getElementById('shareUrl');
         shareInput.value = shortUrl;
@@ -972,62 +1001,49 @@
         navigator.clipboard.writeText(copyText.value);
     };
 
-    // === KISA LINK YÖNLENDİRME ===
+    // === TOKEN KONTROL VE YÖNLENDİRME ===
     window.addEventListener('DOMContentLoaded', async () => {
-        // Kısa link kontrolü
-        const urlParams = new URLSearchParams(window.location.search);
-        const shortCode = urlParams.get('s');
+        // Token URL kontrolü
+        const tokenData = parseTokenUrl();
         
-        if (shortCode) {
-            const originalUrl = getOriginalUrl(shortCode);
-            if (originalUrl) {
-                // Yönlendirme
-                window.location.href = originalUrl;
+        if (tokenData) {
+            if (tokenData.error === 'expired') {
+                document.getElementById('editorSection').style.display = 'none';
+                document.getElementById('expiredSection').style.display = 'block';
                 return;
-            } else {
-                alert('Geçersiz kısa link!');
             }
+            
+            if (tokenData.error === 'invalid') {
+                alert('Geçersiz token!');
+                return;
+            }
+            
+            // Token geçerli, içeriği göster
+            const payload = tokenData.payload;
+            document.getElementById('editorSection').style.display = 'none';
+            
+            // Süre bilgisini token'dan al
+            const tokenInfo = decodeToken(tokenData.token);
+            if (tokenInfo && tokenInfo.durationSeconds > 0) {
+                const expiresAt = tokenInfo.createdAt + tokenInfo.durationSeconds;
+                startCountdown(expiresAt);
+            }
+            
+            if (payload.e === 1) {
+                encryptedDataPayload = payload.c;
+                document.getElementById('passwordPromptSection').style.display = 'block';
+            } else {
+                showContent(payload.c);
+            }
+            return;
         }
 
-        // Yedek yükle
+        // Yedek yükle (normal mod)
         const backup = localStorage.getItem('turhan_editor_backup');
         if (backup) {
             editor.value = backup;
             updateStats();
             saveState();
-        }
-
-        const hash = window.location.hash.substring(1);
-        if (hash) {
-            try {
-                const jsonString = decodeURIComponent(escape(atob(hash)));
-                const payload = JSON.parse(jsonString);
-
-                document.getElementById('editorSection').style.display = 'none';
-
-                if (payload.d > 0) {
-                    const currentTime = Math.floor(Date.now() / 1000);
-                    const expiresAt = payload.t + payload.d;
-                    const remainingSeconds = expiresAt - currentTime;
-
-                    if (remainingSeconds <= 0) {
-                        document.getElementById('expiredSection').style.display = 'block';
-                        return;
-                    }
-
-                    startCountdown(expiresAt);
-                }
-
-                if (payload.e === 1) {
-                    encryptedDataPayload = payload.c;
-                    document.getElementById('passwordPromptSection').style.display = 'block';
-                } else {
-                    showContent(payload.c);
-                }
-
-            } catch {
-                alert('Geçersiz veya bozuk bağlantı!');
-            }
         }
     });
 
