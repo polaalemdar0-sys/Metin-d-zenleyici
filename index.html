@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Turhan TV HD - Metin & Kod Düzenleyici</title>
+    <title>Turhan TV HD Pro - Metin & Kod Düzenleyici</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
@@ -19,6 +19,9 @@
             --text-muted: #9ca3af;
             --input-bg: #080c14;
             --danger: #ef4444;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --info: #3b82f6;
         }
 
         .light-mode {
@@ -47,11 +50,11 @@
         }
 
         .app-container {
-            max-width: 900px;
+            max-width: 1100px;
             width: 100%;
             background: var(--panel-bg);
             border: 1px solid var(--panel-border);
-            border-radius: 20px;
+            border-radius: 24px;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
             overflow: hidden;
             display: flex;
@@ -64,46 +67,129 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            background: var(--input-bg);
         }
 
         .brand { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 1.1rem; }
         .brand-icon {
-            width: 36px; height: 36px;
+            width: 40px; height: 40px;
             background: linear-gradient(135deg, var(--accent), #8b5cf6);
-            border-radius: 10px;
+            border-radius: 12px;
             display: flex; align-items: center; justify-content: center;
             color: white;
+            font-size: 1.2rem;
+        }
+        .brand-badge {
+            background: var(--accent);
+            color: white;
+            font-size: 0.65rem;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-weight: 600;
+            margin-left: 4px;
         }
 
         .header-actions { display: flex; gap: 10px; align-items: center; }
         .app-body { padding: 24px; }
 
+        /* Profesyonel Sistem Paneli - Hızlı */
+        .pro-panel {
+            background: var(--input-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .pro-panel-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
         .settings-panel {
             display: flex;
             flex-wrap: wrap;
             gap: 12px;
-            margin-bottom: 16px;
-            background: var(--input-bg);
-            padding: 12px 16px;
-            border-radius: 12px;
-            border: 1px solid var(--panel-border);
         }
 
-        .setting-item { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 200px; }
-        .setting-item label { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
-        .setting-item input, .setting-item select {
-            width: 100%;
-            padding: 8px 12px;
+        .setting-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+            min-width: 180px;
+            background: var(--panel-bg);
+            padding: 4px 12px 4px 16px;
             border-radius: 8px;
             border: 1px solid var(--panel-border);
-            background: var(--panel-bg);
+            transition: border-color 0.15s;
+        }
+        .setting-item:focus-within { border-color: var(--accent); }
+        .setting-item label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        .setting-item input, .setting-item select {
+            width: 100%;
+            padding: 8px 4px;
+            border: none;
+            background: transparent;
             color: var(--text-main);
             font-size: 0.85rem;
             outline: none;
         }
+        .setting-item input::placeholder { color: var(--text-muted); opacity: 0.6; }
+
+        /* Gelişmiş Araç Çubuğu - Hızlı */
+        .advanced-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        .toolbar-btn {
+            background: var(--input-bg);
+            border: 1px solid var(--panel-border);
+            color: var(--text-muted);
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-size: 0.78rem;
+            cursor: pointer;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            user-select: none;
+        }
+        .toolbar-btn:hover {
+            border-color: var(--accent);
+            color: var(--text-main);
+            transform: translateY(-1px);
+        }
+        .toolbar-btn:active {
+            transform: scale(0.95);
+        }
+        .toolbar-btn.active {
+            border-color: var(--accent);
+            background: var(--accent-glow);
+            color: var(--accent);
+        }
+
+        .editor-wrapper {
+            position: relative;
+        }
 
         textarea {
-            width: 100%; height: 300px;
+            width: 100%;
+            height: 350px;
             background: var(--input-bg);
             color: var(--text-main);
             border: 1px solid var(--panel-border);
@@ -114,65 +200,284 @@
             line-height: 1.6;
             outline: none;
             resize: vertical;
+            transition: border-color 0.15s;
         }
 
-        textarea:focus { border-color: var(--accent); }
+        textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+
+        /* Durum Çubuğu - Hızlı */
+        .editor-status {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 0;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .editor-status .left { display: flex; gap: 16px; }
+        .editor-status .right { display: flex; gap: 12px; align-items: center; }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            display: inline-block;
+            transition: background-color 0.15s;
+        }
+        .status-dot.green { background: var(--success); }
+        .status-dot.yellow { background: var(--warning); }
+        .status-dot.red { background: var(--danger); }
 
         .action-bar {
-            display: flex; flex-wrap: wrap; gap: 12px;
-            justify-content: space-between; align-items: center; margin-top: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 14px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
         }
 
         .btn {
-            background: var(--accent); color: white; border: none;
-            padding: 10px 20px; border-radius: 10px; font-weight: 600;
-            font-size: 0.88rem; cursor: pointer; display: inline-flex;
-            align-items: center; gap: 8px; transition: all 0.2s;
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 9px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            transition: all 0.15s;
+            user-select: none;
         }
 
-        .btn:hover { background: var(--accent-hover); }
+        .btn:hover { background: var(--accent-hover); transform: translateY(-1px); }
+        .btn:active { transform: scale(0.97); }
+
         .btn-secondary {
-            background: rgba(255, 255, 255, 0.05); color: var(--text-muted);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-muted);
             border: 1px solid var(--panel-border);
         }
+        .btn-secondary:hover { background: rgba(255, 255, 255, 0.08); }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+        .btn-success:hover { background: #16a34a; }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+        .btn-danger:hover { background: #dc2626; }
 
         .share-box {
-            margin-top: 16px; background: var(--input-bg);
-            border: 1px solid var(--panel-border); border-radius: 12px;
-            padding: 14px; display: none;
+            margin-top: 14px;
+            background: var(--input-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 12px;
+            padding: 14px 16px;
+            display: none;
+            animation: slideDown 0.2s ease;
         }
 
-        .share-input-group { display: flex; gap: 10px; margin-top: 8px; }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .share-box .share-title {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .share-input-group {
+            display: flex;
+            gap: 8px;
+        }
         .share-input-group input {
-            flex: 1; background: var(--panel-bg);
-            border: 1px solid var(--panel-border); border-radius: 8px;
-            padding: 10px; color: var(--accent);
-            font-family: 'Fira Code', monospace; font-size: 0.85rem; outline: none;
+            flex: 1;
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 8px;
+            padding: 9px 14px;
+            color: var(--accent);
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            outline: none;
+            min-width: 0;
         }
+        .share-input-group input:focus { border-color: var(--accent); }
 
+        /* Görüntüleme Modu */
         #viewSection, #passwordPromptSection, #expiredSection { display: none; }
 
         .view-card {
-            background: var(--input-bg); border: 1px solid var(--panel-border);
-            border-radius: 14px; padding: 24px; min-height: 220px;
-            font-family: 'Fira Code', monospace; font-size: 0.95rem;
-            line-height: 1.7; white-space: pre-wrap; word-break: break-word;
+            background: var(--input-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 14px;
+            padding: 24px;
+            min-height: 220px;
+            max-height: 500px;
+            overflow-y: auto;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.95rem;
+            line-height: 1.7;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        .view-card::-webkit-scrollbar {
+            width: 6px;
+        }
+        .view-card::-webkit-scrollbar-track {
+            background: var(--input-bg);
+            border-radius: 10px;
+        }
+        .view-card::-webkit-scrollbar-thumb {
+            background: var(--panel-border);
+            border-radius: 10px;
         }
 
         .timer-badge {
-            background: rgba(239, 68, 68, 0.1); color: var(--danger);
-            border: 1px solid rgba(239, 68, 68, 0.2); padding: 6px 12px;
-            border-radius: 8px; font-size: 0.85rem; font-weight: 600;
-            display: inline-flex; align-items: center; gap: 8px;
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .timer-badge.urgent {
+            background: rgba(239, 68, 68, 0.2);
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        /* Parola Modal */
+        .password-modal {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .password-modal .icon {
+            font-size: 3.5rem;
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+
+        .password-modal h3 {
+            margin-bottom: 8px;
+            font-size: 1.3rem;
+        }
+
+        .password-modal p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+
+        .password-input-group {
+            max-width: 360px;
+            margin: 0 auto;
+            display: flex;
+            gap: 10px;
+        }
+
+        .password-input-group input {
+            flex: 1;
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--panel-border);
+            background: var(--input-bg);
+            color: var(--text-main);
+            outline: none;
+            font-size: 0.95rem;
+        }
+
+        .password-input-group input:focus { border-color: var(--accent); }
+
+        .expired-section {
+            text-align: center;
+            padding: 50px 20px;
+        }
+
+        .expired-section .icon {
+            font-size: 4rem;
+            color: var(--danger);
+            margin-bottom: 16px;
+        }
+
+        .expired-section h2 {
+            margin-bottom: 8px;
+            font-size: 1.5rem;
+        }
+
+        .expired-section p {
+            color: var(--text-muted);
+            margin-bottom: 24px;
         }
 
         .status-bar {
-            padding: 10px 24px; background: var(--input-bg);
-            border-top: 1px solid var(--panel-border); display: flex;
-            justify-content: space-between; font-size: 0.8rem; color: var(--text-muted);
+            padding: 8px 24px;
+            background: var(--input-bg);
+            border-top: 1px solid var(--panel-border);
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            flex-wrap: wrap;
+            gap: 6px;
         }
 
+        .status-bar .left { display: flex; gap: 16px; flex-wrap: wrap; }
+
         input[type="file"] { display: none; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .app-body { padding: 16px; }
+            .settings-panel { flex-direction: column; }
+            .setting-item { min-width: 100%; }
+            .action-bar { flex-direction: column; align-items: stretch; }
+            .btn-group { justify-content: center; }
+            .share-input-group { flex-direction: column; }
+            .status-bar .left { gap: 10px; }
+            .advanced-toolbar { justify-content: center; }
+            textarea { height: 250px; }
+        }
+
+        @media (max-width: 480px) {
+            .app-header { flex-wrap: wrap; gap: 8px; }
+            .header-actions { width: 100%; justify-content: flex-end; }
+            .brand { font-size: 0.9rem; }
+        }
     </style>
 </head>
 <body>
@@ -181,11 +486,15 @@
     <div class="app-header">
         <div class="brand">
             <div class="brand-icon"><i class="fa-solid fa-tv"></i></div>
-            <span>Turhan TV HD Metin Düzenleyici Özel</span>
+            <span>Turhan TV HD Pro</span>
+            <span class="brand-badge">v2.0</span>
         </div>
         <div class="header-actions">
-            <button class="btn btn-secondary" onclick="toggleTheme()">
+            <button class="toolbar-btn" onclick="toggleTheme()">
                 <i class="fa-solid fa-circle-half-stroke"></i> Tema
+            </button>
+            <button class="toolbar-btn" onclick="toggleFullscreen()">
+                <i class="fa-solid fa-expand"></i>
             </button>
         </div>
     </div>
@@ -193,148 +502,360 @@
     <div class="app-body">
         <!-- EDITÖR MODU -->
         <div id="editorSection">
-            <div class="settings-panel">
-                <div class="setting-item">
-                    <label><i class="fa-solid fa-lock"></i> Parola:</label>
-                    <input type="password" id="linkPassword" placeholder="İsteğe bağlı şifre">
+            <!-- Profesyonel Sistem Paneli -->
+            <div class="pro-panel">
+                <div class="pro-panel-title">
+                    <i class="fa-solid fa-sliders"></i> Sistem Ayarları
                 </div>
-                <div class="setting-item">
-                    <label><i class="fa-solid fa-hourglass-half"></i> Geçerlilik Süresi:</label>
-                    <select id="linkExpiry">
-                        <option value="0">Süresiz</option>
-                        <option value="600">10 Dakika</option>
-                        <option value="3600">1 Saat</option>
-                        <option value="86400">1 Gün</option>
-                        <option value="432000">5 Gün</option>
-                        <option value="604800">7 Gün</option>
-                        <option value="2592000">30 Gün</option>
-                    </select>
-                </div>
-                <div class="setting-item" style="max-width: 140px;">
-                    <label for="fileInput" class="btn btn-secondary" style="width:100%; justify-content:center; cursor:pointer;">
-                        <i class="fa-solid fa-file-import"></i> Dosya Seç
-                    </label>
-                    <input type="file" id="fileInput" onchange="loadFile(event)">
+                <div class="settings-panel">
+                    <div class="setting-item">
+                        <label><i class="fa-solid fa-lock"></i></label>
+                        <input type="password" id="linkPassword" placeholder="İsteğe bağlı şifre">
+                    </div>
+                    <div class="setting-item">
+                        <label><i class="fa-solid fa-hourglass-half"></i></label>
+                        <select id="linkExpiry">
+                            <option value="0">Süresiz</option>
+                            <option value="300">5 Dakika</option>
+                            <option value="600">10 Dakika</option>
+                            <option value="1800">30 Dakika</option>
+                            <option value="3600">1 Saat</option>
+                            <option value="86400">1 Gün</option>
+                            <option value="432000">5 Gün</option>
+                            <option value="604800">7 Gün</option>
+                            <option value="2592000">30 Gün</option>
+                        </select>
+                    </div>
+                    <div class="setting-item" style="max-width: 140px; flex: 0.3;">
+                        <label for="fileInput" class="toolbar-btn" style="border:none; background:transparent; cursor:pointer; padding:0; width:100%; justify-content:center;">
+                            <i class="fa-solid fa-file-import"></i> Dosya
+                        </label>
+                        <input type="file" id="fileInput" onchange="loadFile(event)">
+                    </div>
                 </div>
             </div>
 
-            <textarea id="editor" placeholder="Metninizi veya kodunuzu buraya yazın..." oninput="updateStats()"></textarea>
-            
+            <!-- Gelişmiş Araç Çubuğu -->
+            <div class="advanced-toolbar">
+                <button class="toolbar-btn" onclick="formatText('bold')"><i class="fa-solid fa-bold"></i></button>
+                <button class="toolbar-btn" onclick="formatText('italic')"><i class="fa-solid fa-italic"></i></button>
+                <button class="toolbar-btn" onclick="formatText('code')"><i class="fa-solid fa-code"></i></button>
+                <button class="toolbar-btn" onclick="formatText('strike')"><i class="fa-solid fa-strikethrough"></i></button>
+                <span style="color:var(--panel-border);">|</span>
+                <button class="toolbar-btn" onclick="transformText('uppercase')"><i class="fa-solid fa-arrow-up-a-z"></i> Büyük</button>
+                <button class="toolbar-btn" onclick="transformText('lowercase')"><i class="fa-solid fa-arrow-down-a-z"></i> Küçük</button>
+                <button class="toolbar-btn" onclick="transformText('capitalize')"><i class="fa-solid fa-text-height"></i> Başlık</button>
+                <span style="color:var(--panel-border);">|</span>
+                <button class="toolbar-btn" onclick="trimText()"><i class="fa-solid fa-scissors"></i> Temizle</button>
+                <button class="toolbar-btn" onclick="removeExtraSpaces()"><i class="fa-solid fa-eraser"></i> Boşluk</button>
+            </div>
+
+            <div class="editor-wrapper">
+                <textarea id="editor" placeholder="Metninizi veya kodunuzu buraya yazın..." oninput="updateStats(); autoSave();"></textarea>
+            </div>
+
+            <div class="editor-status">
+                <div class="left">
+                    <span id="charCount">Karakter: 0</span>
+                    <span id="wordCount">Kelime: 0</span>
+                    <span id="lineCount">Satır: 0</span>
+                </div>
+                <div class="right">
+                    <span class="status-indicator">
+                        <span class="status-dot green" id="statusDot"></span>
+                        <span id="saveStatus">Kaydedildi</span>
+                    </span>
+                    <span id="wordCounter">0 karakter</span>
+                </div>
+            </div>
+
             <div class="action-bar">
-                <button class="btn" onclick="generateShareLink()">
-                    <i class="fa-solid fa-bolt"></i> Özel Bağlantı Oluştur & Kısalt
-                </button>
-                <button class="btn btn-secondary" onclick="clearEditor()">
-                    <i class="fa-solid fa-trash-can"></i> Temizle
-                </button>
+                <div class="btn-group">
+                    <button class="btn" onclick="generateShareLink()">
+                        <i class="fa-solid fa-bolt"></i> Özel Bağlantı Oluştur
+                    </button>
+                    <button class="btn btn-success" onclick="exportText()">
+                        <i class="fa-solid fa-download"></i> İndir
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearEditor()">
+                        <i class="fa-solid fa-trash-can"></i> Temizle
+                    </button>
+                </div>
+                <div>
+                    <button class="btn btn-secondary" onclick="undoText()">
+                        <i class="fa-solid fa-rotate-left"></i>
+                    </button>
+                    <button class="btn btn-secondary" onclick="redoText()">
+                        <i class="fa-solid fa-rotate-right"></i>
+                    </button>
+                </div>
             </div>
 
             <div class="share-box" id="shareBox">
-                <p style="font-size: 0.85rem; color: var(--text-muted);">Paylaşıma Hazır Turhan TV HD Bağlantınız:</p>
+                <div class="share-title">
+                    <i class="fa-solid fa-link"></i> Paylaşıma Hazır Turhan TV HD Bağlantınız
+                </div>
                 <div class="share-input-group">
                     <input type="text" id="shareUrl" readonly>
                     <button class="btn" onclick="copyLink()"><i class="fa-solid fa-copy"></i> Kopyala</button>
+                    <button class="btn btn-secondary" onclick="shareViaSocial()"><i class="fa-solid fa-share-nodes"></i> Paylaş</button>
                 </div>
             </div>
         </div>
 
         <!-- SÜRESİ DOLMUŞ KUTUSU -->
-        <div id="expiredSection" style="text-align:center; padding: 40px 10px;">
-            <i class="fa-solid fa-clock-rotate-left" style="font-size: 3.5rem; color: var(--danger); margin-bottom: 16px;"></i>
-            <h2 style="margin-bottom: 8px;">Bu Bağlantının Süresi Dolmıştır!</h2>
-            <p style="color: var(--text-muted); margin-bottom: 24px;">Belirlenen geçerlilik süresi tamamlandığı için bu içeriğe artık erişilemez.</p>
+        <div id="expiredSection" class="expired-section">
+            <div class="icon"><i class="fa-solid fa-clock-rotate-left"></i></div>
+            <h2>Bu Bağlantının Süresi Dolmuştur!</h2>
+            <p>Belirlenen geçerlilik süresi tamamlandığı için bu içeriğe artık erişilemez.</p>
             <a href="index.html" class="btn"><i class="fa-solid fa-plus"></i> Yeni İçerik Oluştur</a>
         </div>
 
         <!-- PAROLA MODAL -->
-        <div id="passwordPromptSection">
-            <div style="text-align: center; padding: 30px 10px;">
-                <i class="fa-solid fa-shield-halved" style="font-size: 3rem; color: var(--accent); margin-bottom: 16px;"></i>
-                <h3 style="margin-bottom: 8px;">Bu İçerik Parola İle Korunuyor</h3>
-                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">Lütfen erişim parolasını girin.</p>
-                <div style="max-width: 320px; margin: 0 auto; display: flex; gap: 8px;">
-                    <input type="password" id="inputDecryptPassword" placeholder="Parola" style="flex:1; padding:10px; border-radius:8px; border:1px solid var(--panel-border); background:var(--input-bg); color:var(--text-main); outline:none;">
-                    <button class="btn" onclick="unlockContent()">Aç</button>
-                </div>
+        <div id="passwordPromptSection" class="password-modal">
+            <div class="icon"><i class="fa-solid fa-shield-halved"></i></div>
+            <h3>Bu İçerik Parola İle Korunuyor</h3>
+            <p>Lütfen erişim parolasını girin.</p>
+            <div class="password-input-group">
+                <input type="password" id="inputDecryptPassword" placeholder="Parola">
+                <button class="btn" onclick="unlockContent()"><i class="fa-solid fa-unlock"></i> Aç</button>
             </div>
         </div>
 
         <!-- OKUMA MODU -->
         <div id="viewSection">
-            <div style="margin-bottom: 14px; font-weight: 600; color: var(--text-muted); font-size: 0.9rem; display: flex; align-items: center; justify-content: space-between;">
-                <span><i class="fa-solid fa-file-contract"></i> Turhan TV HD Paylaşılan İçerik</span>
+            <div style="margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+                <span style="font-weight: 600; color: var(--text-muted); font-size: 0.9rem;">
+                    <i class="fa-solid fa-file-contract"></i> Turhan TV HD Paylaşılan İçerik
+                </span>
                 <div id="timerDisplay" class="timer-badge" style="display:none;"></div>
             </div>
-            
+
             <div class="view-card" id="textContent"></div>
-            
+
             <div class="action-bar" style="margin-top: 20px;">
-                <button class="btn btn-secondary" onclick="copyContent()"><i class="fa-solid fa-copy"></i> İçeriği Kopyala</button>
+                <div class="btn-group">
+                    <button class="btn btn-secondary" onclick="copyContent()"><i class="fa-solid fa-copy"></i> İçeriği Kopyala</button>
+                    <button class="btn btn-secondary" onclick="exportViewContent()"><i class="fa-solid fa-download"></i> İndir</button>
+                </div>
                 <a href="index.html" class="btn" style="text-decoration: none;"><i class="fa-solid fa-plus"></i> Yeni Metin Oluştur</a>
             </div>
         </div>
     </div>
 
     <div class="status-bar">
-        <div style="display:flex; gap:16px;">
-            <span id="charCount">Karakter: 0</span>
-            <span id="wordCount">Kelime: 0</span>
-            <span id="lineCount">Satır: 0</span>
+        <div class="left">
+            <span><i class="fa-regular fa-clock"></i> <span id="currentTime"></span></span>
+            <span><i class="fa-regular fa-hard-drive"></i> Turhan TV HD Pro</span>
+            <span><i class="fa-regular fa-keyboard"></i> UTF-8</span>
         </div>
-        <div>Turhan TV HD Özel | UTF-8</div>
+        <div>
+            <span id="wordCounterStatus">0 kelime</span>
+        </div>
     </div>
 </div>
 
 <script>
+    // === HIZLI PROFESYONEL SİSTEM ===
     const editor = document.getElementById('editor');
     let encryptedDataPayload = null;
     let countdownInterval = null;
+    let undoStack = [];
+    let redoStack = [];
+    let saveTimeout = null;
+    let isFullscreen = false;
+    let isTyping = false;
+    let statsTimeout = null;
 
-    // OTOMATİK LINK KISALTMA FONKSİYONU
-    async function shortenUrl(longUrl) {
+    // === HIZLI BAĞLANTI KISALTMA (Promise ile) ===
+    const shortenUrl = async (longUrl) => {
         try {
             const response = await fetch(`https://tinyurl.com/api-create.php?url=${encodeURIComponent(longUrl)}`);
-            if (!response.ok) return longUrl;
-            return await response.text();
-        } catch (e) {
+            return response.ok ? await response.text() : longUrl;
+        } catch {
             return longUrl;
         }
-    }
+    };
 
-    function updateStats() {
-        const text = editor.value;
-        document.getElementById('charCount').textContent = `Karakter: ${text.length}`;
-        const words = text.trim() ? text.trim().split(/\s+/).length : 0;
-        document.getElementById('wordCount').textContent = `Kelime: ${words}`;
-        const lines = text ? text.split('\n').length : 0;
-        document.getElementById('lineCount').textContent = `Satır: ${lines}`;
-    }
+    // === HIZLI ZAMAN GÖSTERİCİ ===
+    const updateClock = () => {
+        document.getElementById('currentTime').textContent = new Date().toLocaleTimeString('tr-TR');
+    };
+    setInterval(updateClock, 1000);
+    updateClock();
 
-    function toggleTheme() { document.body.classList.toggle('light-mode'); }
+    // === HIZLI İSTATİSTİK GÜNCELLEME (Debounce ile) ===
+    const updateStats = () => {
+        clearTimeout(statsTimeout);
+        statsTimeout = setTimeout(() => {
+            const text = editor.value;
+            const charCount = text.length;
+            const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+            const lines = text ? text.split('\n').length : 0;
 
-    function loadFile(e) {
+            document.getElementById('charCount').textContent = `Karakter: ${charCount}`;
+            document.getElementById('wordCount').textContent = `Kelime: ${words}`;
+            document.getElementById('lineCount').textContent = `Satır: ${lines}`;
+            document.getElementById('wordCounter').textContent = `${charCount} karakter`;
+            document.getElementById('wordCounterStatus').textContent = `${words} kelime`;
+        }, 50);
+    };
+
+    // === HIZLI OTOMATİK KAYIT ===
+    const autoSave = () => {
+        clearTimeout(saveTimeout);
+        const dot = document.getElementById('statusDot');
+        const status = document.getElementById('saveStatus');
+        dot.className = 'status-dot yellow';
+        status.textContent = 'Yazılıyor...';
+        
+        saveTimeout = setTimeout(() => {
+            try {
+                localStorage.setItem('turhan_editor_backup', editor.value);
+                dot.className = 'status-dot green';
+                status.textContent = 'Kaydedildi';
+            } catch {}
+        }, 500);
+    };
+
+    // === HIZLI GERİ AL / İLERİ AL ===
+    const saveState = () => {
+        undoStack.push(editor.value);
+        if (undoStack.length > 100) undoStack.shift();
+        redoStack = [];
+    };
+
+    const undoText = () => {
+        if (undoStack.length > 1) {
+            redoStack.push(undoStack.pop());
+            editor.value = undoStack[undoStack.length - 1];
+            updateStats();
+        }
+    };
+
+    const redoText = () => {
+        if (redoStack.length > 0) {
+            undoStack.push(redoStack.pop());
+            editor.value = undoStack[undoStack.length - 1];
+            updateStats();
+        }
+    };
+
+    // === HIZLI DEĞİŞİKLİK YAKALAMA ===
+    editor.addEventListener('input', () => {
+        if (!isTyping) {
+            saveState();
+            isTyping = true;
+        }
+        clearTimeout(isTyping);
+        setTimeout(() => { isTyping = false; }, 200);
+    });
+
+    // === HIZLI DOSYA YÜKLEME ===
+    const loadFile = (e) => {
         const file = e.target.files[0];
         if (file) {
             const reader = new FileReader();
-            reader.onload = (evt) => { editor.value = evt.target.result; updateStats(); };
+            reader.onload = (evt) => {
+                saveState();
+                editor.value = evt.target.result;
+                updateStats();
+            };
             reader.readAsText(file);
         }
-    }
+        e.target.value = '';
+    };
 
-    async function getRealNetworkTime() {
-        try {
-            const res = await fetch('https://worldtimeapi.org/api/ip');
-            const data = await res.json();
-            return Math.floor(data.unixtime);
-        } catch (e) {
-            return Math.floor(Date.now() / 1000);
+    // === HIZLI METİN BİÇİMLENDİRME ===
+    const formatText = (type) => {
+        const start = editor.selectionStart;
+        const end = editor.selectionEnd;
+        const text = editor.value;
+        const selected = text.substring(start, end);
+
+        if (selected) {
+            const formats = {
+                bold: `**${selected}**`,
+                italic: `_${selected}_`,
+                code: `\`${selected}\``,
+                strike: `~~${selected}~~`
+            };
+            const formatted = formats[type];
+            if (formatted) {
+                saveState();
+                editor.value = text.substring(0, start) + formatted + text.substring(end);
+                editor.selectionStart = start;
+                editor.selectionEnd = start + formatted.length;
+                updateStats();
+            }
         }
-    }
+    };
 
-    // LINK OLUŞTURMA & KISALTMA
-    async function generateShareLink() {
+    // === HIZLI METİN DÖNÜŞTÜRME ===
+    const transformText = (type) => {
+        const start = editor.selectionStart;
+        const end = editor.selectionEnd;
+        const text = editor.value;
+        const selected = text.substring(start, end);
+
+        if (selected) {
+            const transforms = {
+                uppercase: selected.toUpperCase(),
+                lowercase: selected.toLowerCase(),
+                capitalize: selected.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ')
+            };
+            const transformed = transforms[type];
+            if (transformed) {
+                saveState();
+                editor.value = text.substring(0, start) + transformed + text.substring(end);
+                editor.selectionStart = start;
+                editor.selectionEnd = start + transformed.length;
+                updateStats();
+            }
+        }
+    };
+
+    // === HIZLI TEMİZLEME ===
+    const trimText = () => {
+        saveState();
+        editor.value = editor.value.trim();
+        updateStats();
+    };
+
+    const removeExtraSpaces = () => {
+        saveState();
+        editor.value = editor.value.replace(/[ ]{2,}/g, ' ').replace(/\n{3,}/g, '\n\n');
+        updateStats();
+    };
+
+    // === HIZLI TAM EKRAN ===
+    const toggleFullscreen = () => {
+        const container = document.querySelector('.app-container');
+        if (!document.fullscreenElement) {
+            container.requestFullscreen().catch(() => {});
+        } else {
+            document.exitFullscreen();
+        }
+    };
+
+    // === HIZLI DOSYA İNDİRME ===
+    const exportText = () => {
+        const text = editor.value;
+        if (!text.trim()) return alert('İndirilecek metin yok!');
+        const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `turhan_${new Date().toISOString().slice(0,10)}.txt`;
+        link.click();
+        URL.revokeObjectURL(link.href);
+    };
+
+    // === HIZLI BAĞLANTI OLUŞTURMA ===
+    const generateShareLink = async () => {
         const text = editor.value;
         if (!text.trim()) return alert('Lütfen bir metin yazın veya dosya yükleyin!');
+
+        saveState();
 
         const password = document.getElementById('linkPassword').value;
         const durationSeconds = parseInt(document.getElementById('linkExpiry').value);
@@ -359,18 +880,48 @@
         const fullUrl = window.location.origin + window.location.pathname + '#' + encodedData;
 
         const shareInput = document.getElementById('shareUrl');
-        shareInput.value = "Kısaltılıyor...";
+        shareInput.value = 'Kısaltılıyor...';
         document.getElementById('shareBox').style.display = 'block';
 
-        // Link Kısaltma Yapılıyor
         const shortUrl = await shortenUrl(fullUrl);
-
         shareInput.value = shortUrl;
-        navigator.clipboard.writeText(shortUrl).then(() => alert('Turhan TV HD özel kısa bağlantınız kopyalandı!')).catch(() => {});
-    }
 
-    // SAYFA YÜKLENDİĞİNDE SÜRE VE ŞİFRE KONTROLÜ
+        // Hızlı kopyala
+        setTimeout(() => {
+            navigator.clipboard.writeText(shortUrl).catch(() => {});
+        }, 50);
+    };
+
+    // === HIZLI PAYLAŞIM ===
+    const shareViaSocial = () => {
+        const url = document.getElementById('shareUrl').value;
+        if (navigator.share) {
+            navigator.share({
+                title: 'Turhan TV HD Paylaşımı',
+                text: 'Turhan TV HD ile oluşturduğum içeriğe göz at!',
+                url: url
+            }).catch(() => {});
+        } else {
+            window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=Turhan TV HD ile oluşturduğum içeriğe göz at!`, '_blank');
+        }
+    };
+
+    const copyLink = () => {
+        const copyText = document.getElementById('shareUrl');
+        copyText.select();
+        navigator.clipboard.writeText(copyText.value);
+    };
+
+    // === HIZLI SAYFA YÜKLEME ===
     window.addEventListener('DOMContentLoaded', async () => {
+        // Yedek yükle
+        const backup = localStorage.getItem('turhan_editor_backup');
+        if (backup) {
+            editor.value = backup;
+            updateStats();
+            saveState();
+        }
+
         const hash = window.location.hash.substring(1);
         if (hash) {
             try {
@@ -380,7 +931,7 @@
                 document.getElementById('editorSection').style.display = 'none';
 
                 if (payload.d > 0) {
-                    const currentTime = await getRealNetworkTime();
+                    const currentTime = Math.floor(Date.now() / 1000);
                     const expiresAt = payload.t + payload.d;
                     const remainingSeconds = expiresAt - currentTime;
 
@@ -399,18 +950,18 @@
                     showContent(payload.c);
                 }
 
-            } catch (e) {
+            } catch {
                 alert('Geçersiz veya bozuk bağlantı!');
             }
         }
     });
 
-    // CANLI SÜRE SAYAÇ GÖSTERGESİ (Gün, Saat, Dakika, Saniye)
-    function startCountdown(expiresAt) {
+    // === HIZLI SÜRE SAYACI ===
+    const startCountdown = (expiresAt) => {
         const timerBadge = document.getElementById('timerDisplay');
         timerBadge.style.display = 'inline-flex';
 
-        async function updateTimer() {
+        const updateTimer = () => {
             const now = Math.floor(Date.now() / 1000);
             const diff = expiresAt - now;
 
@@ -433,13 +984,15 @@
             timeStr += `${minutes}dk ${seconds < 10 ? '0' : ''}${seconds}sn`;
 
             timerBadge.innerHTML = `<i class="fa-solid fa-stopwatch"></i> Kalan Süre: ${timeStr}`;
-        }
+            timerBadge.classList.toggle('urgent', diff < 300);
+        };
 
         updateTimer();
         countdownInterval = setInterval(updateTimer, 1000);
-    }
+    };
 
-    function unlockContent() {
+    // === HIZLI ŞİFRE ÇÖZME ===
+    const unlockContent = () => {
         const pass = document.getElementById('inputDecryptPassword').value;
         if (!pass) return alert('Lütfen parolayı girin.');
 
@@ -451,40 +1004,88 @@
 
             document.getElementById('passwordPromptSection').style.display = 'none';
             showContent(decryptedText);
-        } catch (e) {
+        } catch {
             alert('Hatalı parola!');
         }
-    }
+    };
 
-    function showContent(text) {
+    // === HIZLI İÇERİK GÖSTERME ===
+    const showContent = (text) => {
         document.getElementById('viewSection').style.display = 'block';
         document.getElementById('textContent').textContent = text;
-        document.getElementById('charCount').textContent = `Karakter: ${text.length}`;
+        
+        const charCount = text.length;
         const words = text.trim() ? text.trim().split(/\s+/).length : 0;
-        document.getElementById('wordCount').textContent = `Kelime: ${words}`;
         const lines = text ? text.split('\n').length : 0;
+
+        document.getElementById('charCount').textContent = `Karakter: ${charCount}`;
+        document.getElementById('wordCount').textContent = `Kelime: ${words}`;
         document.getElementById('lineCount').textContent = `Satır: ${lines}`;
-    }
+        document.getElementById('wordCounterStatus').textContent = `${words} kelime`;
+    };
 
-    function copyLink() {
-        const copyText = document.getElementById('shareUrl');
-        copyText.select();
-        navigator.clipboard.writeText(copyText.value);
-        alert('Bağlantı kopyalandı!');
-    }
-
-    function copyContent() {
+    // === HIZLI KOPYALA ===
+    const copyContent = () => {
         navigator.clipboard.writeText(document.getElementById('textContent').textContent);
-        alert('İçerik kopyalandı!');
-    }
+    };
 
-    function clearEditor() {
-        if(confirm('Tüm metni silmek istediğinize emin misiniz?')) {
+    const exportViewContent = () => {
+        const content = document.getElementById('textContent').textContent;
+        if (!content.trim()) return;
+        const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `turhan_view_${new Date().toISOString().slice(0,10)}.txt`;
+        link.click();
+        URL.revokeObjectURL(link.href);
+    };
+
+    // === HIZLI TEMİZLEME ===
+    const clearEditor = () => {
+        if (confirm('Tüm metni silmek istediğinize emin misiniz?')) {
+            saveState();
             editor.value = '';
             updateStats();
             document.getElementById('shareBox').style.display = 'none';
+            localStorage.removeItem('turhan_editor_backup');
+            document.getElementById('saveStatus').textContent = 'Temizlendi';
+            document.getElementById('statusDot').className = 'status-dot green';
         }
+    };
+
+    // === HIZLI TEMA DEĞİŞTİR ===
+    const toggleTheme = () => {
+        document.body.classList.toggle('light-mode');
+        localStorage.setItem('turhan_theme', document.body.classList.contains('light-mode') ? 'light' : 'dark');
+    };
+
+    // Tema yükle
+    if (localStorage.getItem('turhan_theme') === 'light') {
+        document.body.classList.add('light-mode');
     }
+
+    // === HIZLI KLAVYE KISAYOLLARI ===
+    document.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey)) {
+            switch(e.key) {
+                case 'z':
+                    e.preventDefault();
+                    e.shiftKey ? redoText() : undoText();
+                    break;
+                case 's':
+                    e.preventDefault();
+                    generateShareLink();
+                    break;
+                case 'f':
+                    e.preventDefault();
+                    document.querySelector('.app-container').requestFullscreen?.();
+                    break;
+            }
+        }
+    });
+
+    // İlk state
+    setTimeout(saveState, 50);
 </script>
 
 </body>
