@@ -76,19 +76,34 @@ function createShortLink(text, password, duration) {
     return baseUrl + '?s=' + code;
 }
 
-// Link verisini al
+// Link verisini al - DÜZELTİLDİ
 function getLinkData(code) {
     const data = linkDB[code];
-    if (!data) return null;
+    if (!data) {
+        console.log('Link bulunamadı:', code);
+        return null;
+    }
     
-    // Süre kontrolü
+    console.log('Link verisi:', data);
+    console.log('Şu anki zaman:', Math.floor(Date.now() / 1000));
+    console.log('Oluşturulma:', data.created);
+    console.log('Süre:', data.duration);
+    console.log('Bitiş:', data.created + data.duration);
+    
+    // Süre kontrolü - DÜZELTİLDİ
     if (data.duration > 0) {
         const now = Math.floor(Date.now() / 1000);
-        if (now > data.created + data.duration) {
+        const expiresAt = data.created + data.duration;
+        
+        if (now > expiresAt) {
             data.active = false;
             localStorage.setItem('turhan_short_links', JSON.stringify(linkDB));
+            console.log('LİNK SÜRESİ DOLMUŞ!');
             return null;
         }
+        console.log('Link geçerli, kalan süre:', expiresAt - now, 'saniye');
+    } else {
+        console.log('Süresiz link');
     }
     
     return data;
