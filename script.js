@@ -162,18 +162,54 @@ const exportText = () => {
     URL.revokeObjectURL(link.href);
 };
 
-// === KISA LİNK OLUŞTUR ===
+// === KISA LİNK OLUŞTUR (DÜZELTİLDİ) ===
 const generateShareLink = () => {
     const text = editor.value;
-    if (!text.trim()) return alert('Lütfen bir metin yazın veya dosya yükleyin!');
+    if (!text.trim()) {
+        alert('Lütfen bir metin yazın veya dosya yükleyin!');
+        return;
+    }
 
     saveState();
 
     const password = document.getElementById('linkPassword').value;
     const durationSeconds = parseInt(document.getElementById('linkExpiry').value);
+    const createdAt = Math.floor(Date.now() / 1000);
 
-    const code = createShortLink(text, password, durationSeconds);
-    const shortUrl = DOMAIN + '?s=' + code;
+    let finalContent = text;
+    let isEncrypted = 0;
+
+    if (password) {
+        finalContent = CryptoJS.AES.encrypt(text, password).toString();
+        isEncrypted = 1;
+    }
+
+    const payload = {
+        c: finalContent,
+        e: isEncrypted,
+        t: createdAt,
+        d: durationSeconds
+    };
+
+    // Payload'ı base64 encode et
+    const encodedData = btoa(unescape(encodeURIComponent(JSON.stringify(payload))));
+    
+    // Benzersiz kod oluştur
+    const code = generateShortCode();
+    
+    // Link'i oluştur - view.html'ye yönlendirme yap
+    const baseUrl = window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '/');
+    const shortUrl = baseUrl + 'view.html?d=' + encodeURIComponent(encodedData) + '&code=' + code;
+
+    // Veritabanına kaydet (short.js'deki linkDB'ye)
+    linkDB[code] = {
+        data: encodedData,
+        created: createdAt,
+        duration: durationSeconds,
+        clicks: 0,
+        active: true
+    };
+    localStorage.setItem('turhan_short_links', JSON.stringify(linkDB));
 
     const shareInput = document.getElementById('shareUrl');
     shareInput.value = shortUrl;
@@ -202,6 +238,7 @@ const copyLink = () => {
     const copyText = document.getElementById('shareUrl');
     copyText.select();
     navigator.clipboard.writeText(copyText.value);
+    alert('Link kopyalandı!');
 };
 
 // === TEMİZLEME ===
@@ -211,7 +248,6 @@ const clearEditor = () => {
         editor.value = '';
         updateStats();
         document.getElementById('shareBox').style.display = 'none';
-        document.getElementById('saveStatus').textContent = 'Temizlendi';
     }
 };
 
@@ -246,36 +282,9 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-// === LİNK KONTROL ===
+// === LİNK KONTROL - index.html'de sadece editör göster ===
 window.addEventListener('DOMContentLoaded', async () => {
-    const params = new URLSearchParams(window.location.search);
-    const code = params.get('s');
-    
-    if (code) {
-        const data = getLinkData(code);
-        if (data) {
-            data.clicks = (data.clicks || 0) + 1;
-            localStorage.setItem('turhan_short_links', JSON.stringify(linkDB));
-            
-            try {
-                const jsonString = decodeURIComponent(escape(atob(data.data)));
-                const payload = JSON.parse(jsonString);
-                
-                // view.html'ye yönlendir
-                window.location.href = `view.html?d=${encodeURIComponent(data.data)}`;
-                return;
-            } catch(e) {
-                alert('Geçersiz link!');
-            }
-        } else {
-            // Link süresi dolmuş
-            document.getElementById('editorSection').style.display = 'none';
-            document.getElementById('expiredSection').style.display = 'block';
-            return;
-        }
-    }
-
-    // Normal mod - yedek yok
+    // Normal mod - sadece editörü göster
     updateStats();
     saveState();
 });
